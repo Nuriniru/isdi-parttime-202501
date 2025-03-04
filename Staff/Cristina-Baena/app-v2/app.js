@@ -173,7 +173,6 @@ function createRegisterPage() {
 function createHomePage() {
     var homeContainer = createContainer('');
     var loggedUserId;
-    var users = JSON.parse(usersJson);
     if (localStorage.id){
         loggedUserId = JSON.parse(localStorage.getItem('id'));
     } else {
