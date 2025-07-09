@@ -1,0 +1,1 @@
+curl -X GET http://localhost:5000/api/posts/686d99e3c5a5e2533d4b3f03 -v

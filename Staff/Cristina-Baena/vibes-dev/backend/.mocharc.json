@@ -1,0 +1,5 @@
+{
+  "spec": "./logic/**/*.spec.js",
+  "timeout": 10000,
+  "recursive": true
+}

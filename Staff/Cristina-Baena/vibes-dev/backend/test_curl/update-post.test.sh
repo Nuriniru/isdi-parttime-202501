@@ -1,0 +1,4 @@
+curl -X PUT http://localhost:5000/api/posts/686d99e3c5a5e2533d4b3f03 \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NmQ5MzJkMDk1MWJmM2EzMWI1YzRhMSIsImlhdCI6MTc1MjAxMjk1NiwiZXhwIjoxNzU0NjA0OTU2fQ.RQvbY_aeJcn1wF2goQWJB5C-0aysKb_aKQRfYy713Pw" \
+    -d '{"content": "Updated post content", "hashtags": ["updated", "test"]}' -v

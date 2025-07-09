@@ -1,0 +1,42 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "mocha logic/**/*.spec.js",
+    "test-coverage": "npx c8 --reporter=text --reporter=html mocha logic/**/*.spec.js",
+    "seed": "node scripts/seedData.js",
+    "seed:dev": "NODE_ENV=development node scripts/seedData.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.10.0",
+    "bcryptjs": "^3.0.2",
+    "common": "file:../common",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.1",
+    "isomorphic-dompurify": "^2.26.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.15.1",
+    "pexels": "^1.4.0",
+    "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "c8": "^8.0.1",
+    "chai": "^4.3.10",
+    "chai-as-promised": "^8.0.1",
+    "esmock": "^2.6.4",
+    "mocha": "^11.7.0",
+    "nodemon": "^3.1.10",
+    "sinon": "^21.0.0"
+  }
+}
