@@ -68,13 +68,7 @@ function createForm(inputsArray, submitButtonText, callback) {
 
         for (var i = 0; i < inputsArray.length; i++) {
             var fieldName = inputsArray[i].inputId;
-            var value;
-            if(inputsArray[i].inputType === 'checkbox'){
-                value = form[inputsArray[i].inputId].checked
-            } else {
-                value = form[inputsArray[i],inputid].value
-            }
-
+            var value = form[fieldName].value;
             formData[fieldName] = value;
         }
 
@@ -98,7 +92,7 @@ function registerUser(registerData) {
     }
 
     // Obtener usuarios existentes
-    var usersJson = sessionStorage.getItem('users');
+    var usersJson = localStorage.getItem('users');
     var users = usersJson ? JSON.parse(usersJson) : [];
 
     // Verificar si el usuario ya existe
@@ -121,7 +115,7 @@ function registerUser(registerData) {
     };
 
     users.push(userCreated);
-    sessionStorage.users = JSON.stringify(users);
+    localStorage.users = JSON.stringify(users);
     sessionStorage.id = userCreated.id;
 
     navigateToHome(currentView);
@@ -172,12 +166,10 @@ function createRegisterPage() {
 /*Crear página de inicio*/
 function createHomePage() {
     var homeContainer = createContainer('');
-    var loggedUserId;
-    if (localStorage.id){
-        loggedUserId = JSON.parse(localStorage.getItem('id'));
-    } else {
-        loggedUserId = JSON.parse(sessionStorage.getItem('id'));
-    }
+    var loggedUserId = JSON.parse(sessionStorage.getItem('id'));
+    var usersJson = localStorage.getItem('users');
+    var users = JSON.parse(usersJson);
+
     var userLogged = users ? users.find(function (_user) { 
         return _user.id === loggedUserId 
     }) : undefined;
@@ -191,8 +183,7 @@ function createHomePage() {
     var welcomeText = createTextContainer('h1', `Bienvenido, ${loggedUserUsername}`, '');
 
     var logoutButton = createButton('Cerrar Sesión', '', function () { 
-        localStorage.removeItem('id');
-        sessionStorage.removeItem('id');
+        sessionStorage.removeItem('id'); 
         navigateToLogin(homeContainer) 
     });
 
@@ -202,7 +193,7 @@ function createHomePage() {
 
 /*Iniciar sesión*/
 function loginUser(loginData) {
-    var usersJson = sessionStorage.getItem('users');
+    var usersJson = localStorage.getItem('users');
     var users = JSON.parse(usersJson);
 
     var userLoginCheckout = users ? users.find(function (_user) { 
@@ -213,10 +204,7 @@ function loginUser(loginData) {
         alert("Credenciales incorrectas");
         return;
     }
-    if (loginData['remember-me']) {
-        localStorage.setItem('rememberedUser', userLoginCheckout.id);
-    }
-    
+
     sessionStorage.id = userLoginCheckout.id;
     navigateToHome(currentView);
 }
@@ -247,21 +235,6 @@ function createLoginPage() {
         loginUser
     );
     
-    var loginForm = createForm(
-        [
-            objectEmail, 
-            objectPassword,
-            {
-                label: 'Recordarme', 
-                inputType: 'checkbox', 
-                inputId: 'remember-me', 
-                isRequired: false
-            }
-        ], 
-        'Iniciar Sesión', 
-        loginUser
-    );
-
     var toRegisterButton = createButton('Ir a Registro', '', function () { 
         navigateToRegister(loginContainer) 
     });
@@ -312,4 +285,4 @@ function renderHomePage() {
 }
 
 // Punto de entrada de la aplicación
-localStorage.id || sessionStorage.id ? renderHomePage() : renderLanding();
+sessionStorage.id || localStorage.id ? renderHomePage() : renderLanding()
