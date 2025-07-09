@@ -89,13 +89,10 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
                 ...(formData.image && { image: formData.image })
             };
 
-            // console.log('Creating post with data:', postData);
+            
             const newPost = await createPost(postData);
-            console.log('Created post response:', newPost); // Add this line
-
-            if (onPostCreated) {
-                onPostCreated(newPost);
-            }
+            console.log('Created post response:', newPost);
+            
             // Reset form
             setFormData({ title: '', content: '', image: null });
             

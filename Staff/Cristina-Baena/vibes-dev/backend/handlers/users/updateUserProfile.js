@@ -27,6 +27,11 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     if (sanitizedInput.bio) user.bio = sanitizedInput.bio
     if (sanitizedInput.profilePicture) user.profilePicture = sanitizedInput.profilePicture
     
+    // Add avatar field handling
+    if (sanitizedInput.avatar) {
+        user.avatar = sanitizedInput.avatar
+    }
+    
     const updatedUser = await user.save()
     
     // Sanitize output

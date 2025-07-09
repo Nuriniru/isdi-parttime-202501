@@ -67,14 +67,16 @@ export const likePost = async (postId) => {
     const response = await api.post(`/posts/${postId}/like`, {}, {
         headers: { 'X-No-Auto-Redirect': 'true' }
     });
-    return response.data;
+    // Return the data directly, not the wrapped response
+    return response.data.data || response.data;
 };
 
 export const addComment = async (postId, content) => {
     const response = await api.post(`/posts/${postId}/comments`, { content }, {
         headers: { 'X-No-Auto-Redirect': 'true' }
     });
-    return response.data;
+    // Return unwrapped data for consistency with other functions
+    return response.data.data || response.data;
 };
 
 // User-specific post functions

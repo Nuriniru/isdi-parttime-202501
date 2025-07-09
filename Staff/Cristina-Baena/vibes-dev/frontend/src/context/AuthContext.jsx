@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { login as loginService, register as registerService, getCurrentUser, updateProfile as updateProfileService, deleteAccount as deleteAccountService } from '../services/authService.js'
 
 const AuthContext = createContext()
@@ -6,7 +7,8 @@ const AuthContext = createContext()
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(localStorage.getItem('token'))
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate() // Add this line
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -91,6 +93,7 @@ const AuthProvider = ({ children }) => {
     setToken(null)
     setUser(null)
     setLoading(false)
+    window.location.href = '/'
   }
 
   const isAuthenticated = () => {

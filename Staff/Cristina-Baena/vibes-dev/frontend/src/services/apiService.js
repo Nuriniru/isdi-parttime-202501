@@ -33,10 +33,8 @@ api.interceptors.response.use(
             // Token expired or invalid
             localStorage.removeItem('token');
             
-            // Only redirect if the request doesn't have the 'no-auto-redirect' header
-            if (!error.config?.headers?.['X-No-Auto-Redirect']) {
-                window.location.href = '/login';
-            }
+            // Don't auto-redirect on 401 - let AuthContext handle navigation
+            // Components should handle authentication state changes appropriately
         }
         return Promise.reject(error);
     }

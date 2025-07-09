@@ -60,7 +60,11 @@ const createPost = async (userId, postData) => {
     const transformedPost = {
         ...populatedPost.toObject(),
         id: populatedPost._id.toString(),
-        author: populatedPost.author._id.toString()  // Just return the ID string, not the full object
+        author: {
+            id: populatedPost.author._id.toString(),
+            username: populatedPost.author.username,
+            avatar: populatedPost.author.avatar
+        }
     }
     delete transformedPost._id
     

@@ -7,7 +7,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { getPosts } from '../../services/postService';
 import { getPopularHashtags, getTrendingHashtags } from '../../services/hashtagService';
 
-const PostFeed = ({ sortBy = 'likes' }) => {
+const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
     const { isAuthenticated } = useAuth();
     const isUserAuthenticated = isAuthenticated();
     
@@ -134,17 +134,23 @@ const PostFeed = ({ sortBy = 'likes' }) => {
     };
 
     // Handle post creation
-    const handlePostCreated = (newPost) => {
-        console.log('Received new post:', newPost); // Debug line
+const handlePostCreated = (newPost) => {
+    setPosts(prev => {
+        // Ensure prev is always an array
+        const prevArray = Array.isArray(prev) ? prev : [];
+        // Extract the actual post data from the response
+        const postData = newPost.data || newPost;
         
-        setPosts(prev => {
-            const prevArray = Array.isArray(prev) ? prev : [];
-            // Use consistent structure - adjust based on your backend response
-            const postToAdd = newPost.data || newPost.post || newPost;
-            return [postToAdd, ...prevArray];
-        });
-        loadHashtags();
-    };
+        // Check if post already exists to prevent duplicates
+        if (postData.id && prevArray.some(post => post.id === postData.id)) {
+            return prevArray;
+        }
+        
+        return [postData, ...prevArray];
+    });
+    // Refresh hashtags
+    loadHashtags();
+};
 
     // Load more posts
     const loadMorePosts = () => {

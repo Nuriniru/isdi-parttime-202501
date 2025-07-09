@@ -80,10 +80,9 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
             setLoading(true);
             const response = await likePost(post.id);
             
-            if (response.success) {
-                setIsLiked(response.isLiked);
-                setLikesCount(response.likesCount);
-            }
+            // Remove the response.success check since postService now returns unwrapped data
+            setIsLiked(response.isLiked);
+            setLikesCount(response.likesCount);
         } catch (error) {
             console.error('Error liking post:', error.message);
             showError('Failed to like post');
@@ -117,10 +116,14 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
             setCommentLoading(true);
             const response = await addComment(post.id, newComment.trim());
             
-            if (response.success) {
+            // Now response is unwrapped data
+            if (response.comments) {
                 setComments(response.comments);
-                setNewComment('');
+            } else {
+                // Add the new comment to existing ones
+                setComments(prevComments => [...prevComments, response]);
             }
+            setNewComment('');
         } catch (error) {
             console.error('Error adding comment:', error.message);
             showError('Failed to add comment');
@@ -396,7 +399,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8z" 
                             />
                         </svg>
-                        <span>{comments.length || 0}</span>
+                        <span>{comments?.length || 0}</span>
                     </button>
                 </div>
                 
@@ -430,23 +433,23 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
                         
                         {/* Comments List */}
                         <div className="space-y-3">
-                            {comments.map((comment) => (
+                            {comments?.map((comment) => (
                                 <div key={comment.id} className="flex space-x-3">
-                                    <Avatar user={comment.user} size="sm" />
+                                    <Avatar user={comment.user || comment.author} size="sm" />
                                     <div className="flex-1">
                                         <span
-                                            onClick={() => handleUserClick(comment.user?.id)}
+                                            onClick={() => handleUserClick(comment.user?.id || comment.author?.id)}
                                             className="font-medium text-white hover:underline cursor-pointer"
                                         >
-                                            {comment.user?.username}
+                                            {comment.user?.username || comment.author?.username || 'Anonymous'}
                                         </span>
                                         <div className="bg-gray-50 rounded-lg p-3">
                                             <div className="flex items-center space-x-2 mb-1">
                                                 <span
-                                                    onClick={() => handleUserClick(comment.user?.id)}
+                                                    onClick={() => handleUserClick(comment.user?.id || comment.author?.id)}
                                                     className="font-medium text-sm text-gray-700 - darker grey hover:underline cursor-pointer transition-all"
                                                 >
-                                                    {comment.user?.username}
+                                                    {comment.user?.username || comment.author?.username || 'Anonymous'}
                                                 </span>
                                                 <span className="text-xs text-gray-500">
                                                     {new Date(comment.createdAt).toLocaleDateString()}
