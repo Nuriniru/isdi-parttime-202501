@@ -15,8 +15,10 @@ import deletePost from './posts/deletePost.js'
 import likePost from './posts/likePost.js'
 import addComment from './posts/addComment.js'
 import deleteComment from './posts/deleteComment.js'
+import updatePassword from './users/updatePassword.js';
 
 export {
+    
     loginUser,
     registerUser as registerUserLogic,
     getCurrentUser,
@@ -25,6 +27,7 @@ export {
     getUserLikedPosts,
     getUserCommentedPosts,
     updateUserProfile,
+    updatePassword,
     deleteUser,
     createPost,
     getPost,

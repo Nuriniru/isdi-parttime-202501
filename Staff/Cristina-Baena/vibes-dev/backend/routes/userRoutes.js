@@ -10,6 +10,7 @@ import getUserCommentedPostsHandler from '../handlers/users/getUserCommentedPost
 import updateUserProfileHandler from '../handlers/users/updateUserProfile.js'   
 import deleteUserHandler from '../handlers/users/deleteUser.js'                 
 import getCurrentUserHandler from '../handlers/users/getCurrentUser.js'          
+import updatePassword from '../handlers/users/updatePassword.js';
 
 const router = express.Router()
 
@@ -25,5 +26,6 @@ router.delete('/profile', protect, deleteUserHandler)
 router.get('/profile/posts', protect, getUserPostsHandler)
 router.get('/profile/liked-posts', protect, getUserLikedPostsHandler)
 router.get('/profile/commented-posts', protect, getUserCommentedPostsHandler)
+router.patch('/password', protect, updatePassword);
 
 export default router

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/common/Button';
@@ -10,9 +10,11 @@ import Modal from '../components/common/Modal';
 import { useModal } from '../hooks/useModal';
 import { validator, errors } from 'common';
 import { useValidation } from '../hooks/useValidation';
+import { updateProfile as updateProfileService } from '../services/authService';
+import { updatePassword } from '../services/passwordService';
 
 const Settings = () => {
-  const { user, updateProfile } = useAuth();
+  const { user } = useAuth(); // Remove updateProfile from here
   const navigate = useNavigate();
   const { modal, hideModal, showError } = useModal();
   
@@ -81,8 +83,9 @@ const Settings = () => {
         avatarData.url = imageData.url;
         avatarData.thumbnail = imageData.thumbnail || imageData.url;
       }
-  
-      await updateProfile({ avatar: avatarData });
+
+      // Fix: Use updateProfileService instead of updateProfile
+      await updateProfileService({ avatar: avatarData });
       setShowAvatarSelector(false);
     } catch (error) {
       console.error('Error updating avatar:', error);
@@ -94,41 +97,140 @@ const Settings = () => {
   };
 
   const handleUpdateProfile = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrors({});
+      console.log('=== FUNCTION CALLED ==='); // Add this line first
+      e.preventDefault();
+      try {
+          setLoading(true);
+          setErrors({});
+  
+          // Debug: Log form data to see what we're working with
+          console.log('=== FORM DATA DEBUG ===');
+          console.log('Current Password:', formData.currentPassword ? '[FILLED]' : '[EMPTY]');
+          console.log('New Password:', formData.newPassword ? '[FILLED]' : '[EMPTY]');
+          console.log('Confirm Password:', formData.confirmPassword ? '[FILLED]' : '[EMPTY]');
+          console.log('All password fields filled?', !!(formData.currentPassword && formData.newPassword && formData.confirmPassword));
+  
+          // Handle password change first if provided
+          if (formData.currentPassword && formData.newPassword && formData.confirmPassword) {
+              console.log('=== ENTERING PASSWORD UPDATE LOGIC ===');
+              
+              // Validate password fields
+              if (formData.newPassword !== formData.confirmPassword) {
+                  throw new Error('New password and confirmation do not match');
+              }
+              if (formData.newPassword.length < 6) {
+                  throw new Error('New password must be at least 6 characters long');
+              }
+  
+              console.log('=== CALLING updatePassword ===');
+              // Call updatePassword with only 2 parameters
+              await updatePassword(formData.currentPassword, formData.newPassword);
+              
+              // Clear only password fields after successful update
+              setFormData(prev => ({
+                  ...prev,
+                  currentPassword: '',
+                  newPassword: '',
+                  confirmPassword: ''
+              }));
+              
+              showSuccess('Password updated successfully!');
+              
+              // Check if there are other profile changes
+              const hasProfileChanges = 
+                  formData.username !== user.username ||
+                  formData.email !== user.email ||
+                  formData.bio !== user.bio ||
+                  formData.avatar;
+              
+              console.log('=== HAS OTHER PROFILE CHANGES? ===', hasProfileChanges);
+              
+              // If only password was changed, return early
+              if (!hasProfileChanges) {
+                  console.log('=== RETURNING EARLY - ONLY PASSWORD CHANGED ===');
+                  return;
+              }
+          }
 
-    try {
-      const updateData = {
-        username: formData.username,
-        email: formData.email,
-        bio: formData.bio
-      };
-
-      // Include avatar if changed
-      if (formData.avatar) {
-        updateData.avatar = formData.avatar;
+          console.log('=== PROCEEDING TO PROFILE UPDATE ===');
+          
+          // Update profile with other data
+          const updateData = {
+              username: formData.username,
+              email: formData.email,
+              bio: formData.bio
+          };
+  
+          if (formData.avatar) {
+              updateData.avatar = formData.avatar;
+          }
+          
+          // Validate required fields
+          if (!updateData.username || !updateData.email) {
+              throw new Error('Username and email are required');
+          }
+          
+          const updatedUser = await updateProfileService(updateData);
+          
+          showSuccess('Profile updated successfully!');
+          setShowEditModal(false);
+          
+      } catch (error) {
+          setErrors({ general: error.message });
+          showError(`Failed to update profile: ${error.message}`);
+      } finally {
+          setLoading(false); // Fix: Use setLoading instead of setUpdating
       }
-
-      // Only include password if user wants to change it
-      if (formData.newPassword) {
-        if (formData.newPassword !== formData.confirmPassword) {
-          setErrors({ confirmPassword: 'Passwords do not match' });
-          setLoading(false);
-          return;
-        }
-        updateData.password = formData.newPassword;
-      }
-
-      await updateProfile(updateData);
-      navigate('/profile');
-    } catch (error) {
-      setErrors({ submit: 'Failed to update profile' });
-    } finally {
-      setLoading(false);
-    }
   };
 
+  // Remove this entire function as it's not being used
+  // const handlePasswordChange = async () => {
+  //   try {
+  //     // Validate password fields
+  //     if (!formData.currentPassword) {
+  //         throw new Error('Current password is required');
+  //     }
+  //     if (!formData.newPassword) {
+  //         throw new Error('New password is required');
+  //     }
+  //     if (formData.newPassword !== formData.confirmPassword) {
+  //         throw new Error('New password and confirmation do not match');
+  //     }
+  //     if (formData.newPassword.length < 6) {
+  //         throw new Error('New password must be at least 6 characters long');
+  //     }
+  
+  //     await updatePassword(
+  //         formData.currentPassword,
+  //         formData.newPassword,
+  //         formData.confirmPassword
+  //     );
+  
+  //     // Clear password fields after successful update
+  //     setFormData(prev => ({
+  //       ...prev,
+  //       currentPassword: '',
+  //       newPassword: '',
+  //       confirmPassword: ''
+  //     }));
+  
+  //     // Show success message
+  //     alert('Password updated successfully!');
+  //   } catch (error) {
+  //     throw new Error(`Password update failed: ${error.message}`);
+  //   }
+  // };
+// Add this useEffect after your state declarations
+useEffect(() => {
+  if (user) {
+    setFormData(prev => ({
+      ...prev,
+      username: user.username || '',
+      email: user.email || '',
+      bio: user.bio || ''
+    }));
+  }
+}, [user]);
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-purple-900/70 via-purple-800 to-transparent">
@@ -203,33 +305,53 @@ const Settings = () => {
               {/* Password Section */}
               <div className="space-y-4">
                 <h2 className="text-lg font-semibold text-white">Change Password</h2>
-                <Input
-                  label="Current Password"
-                  name="currentPassword"
-                  type="password"
-                  value={formData.currentPassword}
-                  onChange={handleChange}
-                  error={errors.currentPassword}
-                  placeholder="Enter current password to change"
-                />
-                <Input
-                  label="New Password"
-                  name="newPassword"
-                  type="password"
-                  value={formData.newPassword}
-                  onChange={handleChange}
-                  error={errors.newPassword}
-                  placeholder="Leave blank to keep current password"
-                />
-                <Input
-                  label="Confirm New Password"
-                  name="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  error={errors.confirmPassword}
-                  placeholder="Confirm your new password"
-                />
+                {/* Current Password */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Current Password
+                  </label>
+                  <Input
+                    type="password"
+                    name="currentPassword"
+                    value={formData.currentPassword}
+                    onChange={handleChange}
+                    placeholder="Enter current password"
+                    error={errors.currentPassword || validationErrors.currentPassword}
+                    autocomplete="current-password"
+                  />
+                </div>
+                
+                {/* New Password */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    New Password
+                  </label>
+                  <Input
+                    type="password"
+                    name="newPassword"
+                    value={formData.newPassword}
+                    onChange={handleChange}
+                    placeholder="Enter new password"
+                    error={errors.newPassword || validationErrors.newPassword}
+                    autocomplete="new-password"
+                  />
+                </div>
+                
+                {/* Confirm Password */}
+                <div>
+                  <label className="block text-sm font-medium text-white mb-2">
+                    Confirm New Password
+                  </label>
+                  <Input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm new password"
+                    error={errors.confirmPassword}
+                    autocomplete="new-password"
+                  />
+                </div>
               </div>
 
               {/* Error Message */}

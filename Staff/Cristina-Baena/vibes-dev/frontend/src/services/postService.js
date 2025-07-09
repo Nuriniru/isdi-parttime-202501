@@ -103,7 +103,8 @@ export const getUserPosts = async (userId, page = 1, limit = 10) => {
         });
         
         const response = await api.get(`/posts?${params}`);
-        return response.data;
+        // Return the data object which contains posts, totalPages, etc.
+        return response.data.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Failed to fetch user posts');
     }

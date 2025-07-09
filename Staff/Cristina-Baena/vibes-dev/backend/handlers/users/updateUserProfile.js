@@ -11,39 +11,53 @@ const generateToken = (id) => {
     })
 }
 
-const updateUserProfile = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id)
-    
-    if (!user) {
-        throw new errors.NotFoundError('User not found')
-    }
+const updateUserProfile = async (req, res, next) => {
+    try {
+        const userId = req.user.id;
+        const { username, email, bio, avatar } = req.body;
 
-    // Sanitize input
-    const sanitizedInput = sanitizeObject(req.body)
-    
-    // Update user fields
-    if (sanitizedInput.username) user.username = sanitizedInput.username
-    if (sanitizedInput.email) user.email = sanitizedInput.email
-    if (sanitizedInput.bio) user.bio = sanitizedInput.bio
-    if (sanitizedInput.profilePicture) user.profilePicture = sanitizedInput.profilePicture
-    
-    // Add avatar field handling
-    if (sanitizedInput.avatar) {
-        user.avatar = sanitizedInput.avatar
-    }
-    
-    const updatedUser = await user.save()
-    
-    // Sanitize output
-    const sanitizedUser = sanitizeUser(updatedUser.toObject())
-    
-    res.json({
-        success: true,
-        data: {
-            ...sanitizedUser,
-            token: generateToken(updatedUser._id)
+        // Remove all password-related logic from here
+        // Only handle profile fields
+        
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new errors.ExistenceError('User not found');
         }
-    })
-})
 
-export default updateUserProfile
+        // Update only profile fields
+        if (username !== undefined) user.username = username;
+        if (email !== undefined) user.email = email;
+        if (bio !== undefined) user.bio = bio;
+        if (avatar !== undefined) user.avatar = avatar;
+
+        await user.save();
+
+        // Generate new token with updated user data
+        const token = jwt.sign(
+            { id: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        const sanitizedUser = {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            bio: user.bio,
+            avatar: user.avatar,
+            createdAt: user.createdAt
+        };
+
+        res.status(200).json({
+            success: true,
+            data: {
+                user: sanitizedUser,
+                token
+            }
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export default updateUserProfile;

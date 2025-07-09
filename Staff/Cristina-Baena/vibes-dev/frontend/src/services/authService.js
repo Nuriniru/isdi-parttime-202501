@@ -66,3 +66,12 @@ export const uploadProfilePicture = async (formData) => {
         throw new Error(error.response?.data?.message || 'Failed to upload profile picture');
     }
 };
+
+export const updatePassword = async (passwordData) => {
+    try {
+        const response = await api.patch('/users/password', passwordData);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Failed to update password');
+    }
+};

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { getUserProfile, uploadProfilePicture } from '../services/authService';
+import { getUserProfile, uploadProfilePicture, updatePassword } from '../services/authService';
 import { getMyPosts, getMyLikedPosts, getMyCommentedPosts } from '../services/postService';
 import PostCard from '../components/posts/PostCard';
 import LoadingSpinner from '../components/common/LoadingSpinner';
@@ -203,25 +203,14 @@ function Profile() {
 
     // Avatar selection handler (actually saves the avatar)
     const handleAvatarSelect = async (imageData) => {
-        setUpdating(true);
         try {
-            // Validate image size before sending
-            if (imageData.source === 'upload' && imageData.url) {
-                const base64Data = imageData.url.split(',')[1]
-                const sizeInBytes = (base64Data.length * 3) / 4
-                const maxSizeInMB = 5
-                const maxSizeInBytes = maxSizeInMB * 1024 * 1024
-                
-                if (sizeInBytes > maxSizeInBytes) {
-                    throw new Error(`Image size too large. Maximum size is ${maxSizeInMB}MB`)
-                }
-            }
+            setUpdating(true);
             
             const avatarData = {
                 source: imageData.source,
                 alt: imageData.alt || imageData.originalName || 'User avatar'
             };
-
+    
             // Handle different avatar sources
             if (imageData.source === 'upload') {
                 avatarData.url = imageData.url;
@@ -240,9 +229,12 @@ function Profile() {
                 avatarData.url = imageData.url;
                 avatarData.thumbnail = imageData.thumbnail || imageData.url;
             }
-
+    
             const updatedUser = await updateProfile({ avatar: avatarData });
-            setUserProfile(updatedUser); // This updates the UI immediately
+            
+            // Force a fresh fetch of the user profile to ensure we have the latest data
+            await fetchUserProfile();
+            
             setShowAvatarSelector(false);
             setPreviewAvatar(null);
             showSuccess('Avatar updated successfully!');
@@ -274,31 +266,72 @@ function Profile() {
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
+        console.log('=== PROFILE UPDATE FUNCTION CALLED ===');
+        
         try {
             setUpdating(true);
             setErrors({});
             
-            const updateData = {
-                username: editForm.username,
-                email: editForm.email,
-                bio: editForm.bio
-            };
-    
-            // Only include password if user wants to change it
-            if (editForm.newPassword) {
+            console.log('Form data:', {
+                currentPassword: editForm.currentPassword ? '***filled***' : 'empty',
+                newPassword: editForm.newPassword ? '***filled***' : 'empty', 
+                confirmPassword: editForm.confirmPassword ? '***filled***' : 'empty'
+            });
+            
+            // Check if user wants to update password
+            const isPasswordUpdate = editForm.currentPassword && editForm.newPassword && editForm.confirmPassword;
+            console.log('Is password update?', isPasswordUpdate);
+            
+            if (isPasswordUpdate) {
+                console.log('=== ENTERING PASSWORD UPDATE LOGIC ===');
+                
+                // Validate password fields
                 if (editForm.newPassword !== editForm.confirmPassword) {
                     setErrors({ confirmPassword: 'Passwords do not match' });
                     setUpdating(false);
                     return;
                 }
+                
                 if (editForm.newPassword.length < 6) {
                     setErrors({ newPassword: 'Password must be at least 6 characters long' });
                     setUpdating(false);
                     return;
                 }
-                updateData.password = editForm.newPassword;
+                
+                try {
+                    console.log('=== CALLING updatePassword SERVICE ===');
+                    await updatePassword({
+                        currentPassword: editForm.currentPassword,
+                        newPassword: editForm.newPassword
+                    });
+                    console.log('Password updated successfully');
+                    showSuccess('Password updated successfully!');
+                    
+                    // Clear password fields after successful update
+                    setEditForm(prev => ({
+                        ...prev,
+                        currentPassword: '',
+                        newPassword: '',
+                        confirmPassword: ''
+                    }));
+                    
+                } catch (passwordError) {
+                    console.error('Password update error:', passwordError);
+                    setErrors({ currentPassword: passwordError.message || 'Failed to update password' });
+                    showError(passwordError.message || 'Failed to update password');
+                    setUpdating(false);
+                    return;
+                }
             }
             
+            // Update profile information (username, email, bio)
+            const updateData = {
+                username: editForm.username,
+                email: editForm.email,
+                bio: editForm.bio
+            };
+            
+            console.log('Updating profile data:', updateData);
             const result = await updateProfile(updateData);
             
             if (result.success !== false) {
@@ -308,14 +341,6 @@ function Profile() {
                     username: editForm.username,
                     email: editForm.email,
                     bio: editForm.bio
-                }));
-                
-                // Clear password fields and close modal
-                setEditForm(prev => ({
-                    ...prev,
-                    currentPassword: '',
-                    newPassword: '',
-                    confirmPassword: ''
                 }));
                 
                 setShowEditModal(false);
@@ -331,7 +356,9 @@ function Profile() {
                     fetchCommentedPosts();
                 }
                 
-                showSuccess('Profile updated successfully!');
+                if (!isPasswordUpdate) {
+                    showSuccess('Profile updated successfully!');
+                }
             }
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -433,7 +460,7 @@ function Profile() {
                             className={`inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-base ${
                                 activeTab === 'myPosts'
                                     ? 'bg-purple-600 hover:bg-purple-700 text-white focus:ring-purple-500'
-                                    : 'bg-purple-600/20 hover:bg-purple-600/30 text-white/80 hover:text-white focus:ring-purple-500 border border-purple-400/30'
+                                    : 'bg-purple-600/20 hover:bg-purple-600/30 text-white/80 hover:text-white focus:ring-purple-500'
                             }`}
                         >
                             My Posts 
@@ -443,7 +470,7 @@ function Profile() {
                             className={`inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-base ${
                                 activeTab === 'likedPosts'
                                     ? 'bg-purple-600 hover:bg-purple-700 text-white focus:ring-purple-500'
-                                    : 'bg-purple-600/20 hover:bg-purple-600/30 text-white/80 hover:text-white focus:ring-purple-500 border border-purple-400/30'
+                                    : 'bg-purple-600/20 hover:bg-purple-600/30 text-white/80 hover:text-white focus:ring-purple-500'
                             }`}
                         >
                             Liked Posts 
@@ -453,7 +480,7 @@ function Profile() {
                             className={`inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 px-4 py-2 text-base ${
                                 activeTab === 'commentedPosts'
                                     ? 'bg-purple-600 hover:bg-purple-700 text-white focus:ring-purple-500'
-                                    : 'bg-purple-600/20 hover:bg-purple-600/30 text-white/80 hover:text-white focus:ring-purple-500 border border-purple-400/30'
+                                    : 'bg-purple-600/20 hover:bg-purple-600/30 text-white/80 hover:text-white focus:ring-purple-500'
                             }`}
                         >
                             My Comments 
