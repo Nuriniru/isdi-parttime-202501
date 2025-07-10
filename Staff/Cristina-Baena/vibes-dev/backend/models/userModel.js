@@ -53,11 +53,10 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 })
 
-// Remove duplicate indexes - email and username already have unique: true
-// Only keep the createdAt index since it's not defined in the schema
+
 userSchema.index({ createdAt: -1 })
 
-// Pre-save middleware to hash password
+
 userSchema.pre('save', async function(next) {
     if (!this.isModified('password')) {
         return next()
@@ -72,12 +71,12 @@ userSchema.pre('save', async function(next) {
     }
 })
 
-// Method to compare password
+
 userSchema.methods.comparePassword = async function(candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password)
 }
 
-// Add this to the userSchema
+
 userSchema.methods.toJSON = function() {
     const user = this.toObject();
     delete user.password;

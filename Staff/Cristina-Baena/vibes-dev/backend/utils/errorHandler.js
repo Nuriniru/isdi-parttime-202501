@@ -62,7 +62,7 @@ export const errorMiddleware = (err, req, res, next) => {
         query: req.query
     })
 
-    // Handle specific error types
+ 
     if (err instanceof errors.ValidationError) {
         return res.status(400).json({ 
             success: false,
@@ -103,7 +103,7 @@ export const errorMiddleware = (err, req, res, next) => {
         })
     }
     
-    // Handle MongoDB errors
+
     if (err.name === 'MongoError' || err.name === 'MongooseError') {
         return res.status(500).json({ 
             success: false,
@@ -111,8 +111,7 @@ export const errorMiddleware = (err, req, res, next) => {
             message: 'A database error occurred' 
         })
     }
-    
-    // Handle JWT errors
+
     if (err.name === 'JsonWebTokenError') {
         return res.status(401).json({ 
             success: false,
@@ -129,7 +128,7 @@ export const errorMiddleware = (err, req, res, next) => {
         })
     }
     
-    // Default error response
+
     res.status(500).json({ 
         success: false,
         error: 'Internal Server Error',

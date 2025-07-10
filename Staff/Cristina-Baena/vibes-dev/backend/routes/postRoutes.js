@@ -4,10 +4,10 @@ import { validatePostContent, validateObjectId } from '../middleware/validation.
 import Post from '../models/postModel.js'
 import Hashtag from '../models/hashtagModel.js'
 
-// Import logic functions
+
 import { createPost as createPostLogic, likePost as likePostLogic, getPosts as getPostsLogic } from '../logic/index.js'
 
-// Import handlers
+
 import addCommentHandler from '../handlers/posts/addComment.js'
 import deleteCommentHandler from '../handlers/posts/deleteComment.js'
 import createPostHandler from '../handlers/posts/createPost.js'
