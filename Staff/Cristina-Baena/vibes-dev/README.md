@@ -1,5 +1,5 @@
 # VIBES APP
-
+![Vibes App](..\documents\vibes.png)
 ## Description
 
 Vibes App is a social media application that allows users to share posts, interact through comments and likes, and discover content through hashtags. Users can create personalized profiles with custom avatars, share their thoughts and experiences, and connect with others in a social community.
@@ -166,5 +166,4 @@ Vibes App is a social media application that allows users to share posts, intera
 }
 ```
 ### Test Coverage
-
-![Coverage]
+![Coverage](..\documents\test-coverage.png)
