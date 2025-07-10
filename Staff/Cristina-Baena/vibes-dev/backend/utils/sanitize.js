@@ -48,7 +48,7 @@ export const sanitizeUser = (user) => {
     const sanitized = {
         id: user._id || user.id,
         username: sanitizeInput(user.username),
-        email: user.email, // Email is already validated
+        email: user.email, 
         bio: sanitizeInput(user.bio),
         avatar: user.avatar,
         createdAt: user.createdAt,

@@ -51,7 +51,7 @@ describe('createPost', () => {
         expect(result.title).to.equal('Test Post')
         expect(result.content).to.equal('This is a test post content')
         expect(result.hashtags).to.deep.equal(['test', 'mocha'])
-        expect(result.author.toString()).to.equal(testUserId)
+        expect(result.author.id).to.equal(testUserId) // Changed from result.author.toString()
         expect(result.likes).to.be.an('array').that.is.empty
     })
 

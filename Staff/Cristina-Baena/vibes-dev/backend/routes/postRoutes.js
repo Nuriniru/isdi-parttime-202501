@@ -19,17 +19,16 @@ import getPostsHandler from '../handlers/posts/getPosts.js'
 
 const router = express.Router()
 
-// Logging middleware
 router.use('/', (req, res, next) => {
     console.log('POST ROUTES: Request to', req.method, req.path, 'with query:', req.query)
     next()
 })
 
-// Public routes - use handlers where available
+
 router.get('/', getPostsHandler)
 router.get('/:id', validateObjectId, getPostHandler)
 
-// Protected routes - use handlers where available
+
 router.post('/', protect, validatePostContent, createPostHandler)
 router.put('/:id', protect, validateObjectId, validatePostContent, updatePostHandler)
 router.delete('/:id', protect, validateObjectId, deletePostHandler)

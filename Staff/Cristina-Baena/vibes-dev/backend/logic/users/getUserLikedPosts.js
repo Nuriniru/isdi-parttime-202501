@@ -8,10 +8,10 @@ const getUserLikedPosts = async (userId, filters = {}) => {
     const { page = 1, limit = 10 } = filters
     const skip = (page - 1) * limit
     
-    // Convert userId to ObjectId for MongoDB query
+    
     const userObjectId = new mongoose.Types.ObjectId(userId)
     
-    // Find posts where the user's ID is in the likes array
+    
     const posts = await Post.aggregate([
         {
             $match: {
@@ -129,7 +129,7 @@ const getUserLikedPosts = async (userId, filters = {}) => {
         }
     ])
     
-    // Get total count for pagination
+    
     const totalCount = await Post.countDocuments({
         likes: { $in: [userObjectId] }
     })

@@ -103,12 +103,7 @@ const Settings = () => {
           setLoading(true);
           setErrors({});
   
-          // Debug: Log form data to see what we're working with
-          console.log('=== FORM DATA DEBUG ===');
-          console.log('Current Password:', formData.currentPassword ? '[FILLED]' : '[EMPTY]');
-          console.log('New Password:', formData.newPassword ? '[FILLED]' : '[EMPTY]');
-          console.log('Confirm Password:', formData.confirmPassword ? '[FILLED]' : '[EMPTY]');
-          console.log('All password fields filled?', !!(formData.currentPassword && formData.newPassword && formData.confirmPassword));
+          
   
           // Handle password change first if provided
           if (formData.currentPassword && formData.newPassword && formData.confirmPassword) {
@@ -122,11 +117,11 @@ const Settings = () => {
                   throw new Error('New password must be at least 6 characters long');
               }
   
-              console.log('=== CALLING updatePassword ===');
-              // Call updatePassword with only 2 parameters
+             
+             
               await updatePassword(formData.currentPassword, formData.newPassword);
               
-              // Clear only password fields after successful update
+              
               setFormData(prev => ({
                   ...prev,
                   currentPassword: '',
@@ -143,7 +138,7 @@ const Settings = () => {
                   formData.bio !== user.bio ||
                   formData.avatar;
               
-              console.log('=== HAS OTHER PROFILE CHANGES? ===', hasProfileChanges);
+             
               
               // If only password was changed, return early
               if (!hasProfileChanges) {
@@ -152,7 +147,7 @@ const Settings = () => {
               }
           }
 
-          console.log('=== PROCEEDING TO PROFILE UPDATE ===');
+         
           
           // Update profile with other data
           const updateData = {
@@ -183,7 +178,6 @@ const Settings = () => {
       }
   };
 
-  // Remove this entire function as it's not being used
   // const handlePasswordChange = async () => {
   //   try {
   //     // Validate password fields

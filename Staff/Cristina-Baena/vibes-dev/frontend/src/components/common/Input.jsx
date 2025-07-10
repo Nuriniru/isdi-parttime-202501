@@ -11,15 +11,15 @@ const Input = ({
   disabled = false,
   error,
   className = '',
-  multiline = false,  // Add multiline prop with default false
-  rows = 3,           // Add rows prop for textarea
+  multiline = false,  
+  rows = 3,          
   ...props 
 }) => {
-  const baseClasses = 'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors'
+  const baseClasses = 'w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors text-white'
   
   const stateClasses = error 
     ? 'border-red-500 bg-red-50' 
-    : 'border-gray-300 bg-white hover:border-gray-400'
+    : 'border-gray-300 bg-transparent hover:border-gray-400'
   
   const disabledClasses = disabled 
     ? 'opacity-50 cursor-not-allowed bg-gray-100' 
@@ -32,7 +32,7 @@ const Input = ({
     ${className}
   `.trim().replace(/\s+/g, ' ')
   
-  // Filter out multiline and rows from props to prevent them from being passed to input/textarea
+  
   const { multiline: _, rows: __, ...filteredProps } = props;
   
   return (

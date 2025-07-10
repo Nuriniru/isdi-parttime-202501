@@ -94,7 +94,7 @@ const getUserCommentedPosts = async (userId, filters = {}) => {
                 commentUsers: 0
             }
         },
-        // REPLACE THE PROBLEMATIC $addFields WITH $set:
+        
         {
             $set: {
                 id: { $toString: '$_id' },
@@ -136,7 +136,7 @@ const getUserCommentedPosts = async (userId, filters = {}) => {
         }
     ])
     
-    // Get total count for pagination
+    
     const totalCount = await Post.countDocuments({
         'comments.user': userObjectId
     })

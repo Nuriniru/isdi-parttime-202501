@@ -7,16 +7,16 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
     const [error, setError] = useState(null);
     const [query, setQuery] = useState('');
     const [selectedTab, setSelectedTab] = useState('pexels');
-    const [uploadedImage, setUploadedImage] = useState(null); // Add state for uploaded image preview
+    const [uploadedImage, setUploadedImage] = useState(null); 
 
     useEffect(() => {
         if (selectedTab === 'pexels') {
-            // Only load curated images on initial load, don't auto-search
+            
             loadCuratedImages();
         }
     }, [selectedTab]);
 
-    // Fix: Change searchQuery to query
+    
     useEffect(() => {
         if (selectedTab === 'pexels' && query) {
             searchImagesForPosts(query);
@@ -51,17 +51,17 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
         }
     };
 
-    // New function to handle search button click
+   
     const handleSearch = () => {
         if (query.trim()) {
             setSearchQuery(query.trim());
         } else {
-            // If search is empty, load curated images
+           
             loadCuratedImages();
         }
     };
 
-    // New function to handle Enter key press
+    
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleSearch();
@@ -108,7 +108,7 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
                 return;
             }
 
-            // Validate file type
+            
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
             if (!allowedTypes.includes(file.type)) {
                 console.error('ImageSelector: Invalid file type:', file.type);

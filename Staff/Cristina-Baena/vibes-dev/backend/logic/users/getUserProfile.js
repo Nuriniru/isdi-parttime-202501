@@ -10,7 +10,7 @@ const getUserProfile = async (userId) => {
         throw new errors.NotFoundError('User not found')
     }
     
-    // Transform _id to id for frontend compatibility
+    
     const transformedUser = {
         ...user.toObject(),
         id: user._id.toString()

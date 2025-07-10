@@ -1,7 +1,7 @@
 import logger from './logger.js'
 import { errors } from 'common'
 
-// Standardized error handling wrapper
+
 export const asyncHandler = (fn) => {
     return async (req, res, next) => {
         try {
@@ -20,7 +20,7 @@ export const asyncHandler = (fn) => {
     }
 }
 
-// Standardized logic function wrapper
+
 export const logicHandler = (fn) => {
     return async (...args) => {
         try {
@@ -33,7 +33,7 @@ export const logicHandler = (fn) => {
                 args: args.length
             })
             
-            // Re-throw known errors
+            
             if (error instanceof errors.ValidationError ||
                 error instanceof errors.NotFoundError ||
                 error instanceof errors.AuthError ||
@@ -42,13 +42,13 @@ export const logicHandler = (fn) => {
                 throw error
             }
             
-            // Wrap unknown errors
+            
             throw new errors.ServerError(`Internal server error: ${error.message}`)
         }
     }
 }
 
-// Enhanced error middleware
+
 export const errorMiddleware = (err, req, res, next) => {
     logger.error('Request error:', {
         error: err.message,

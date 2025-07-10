@@ -29,7 +29,7 @@ const LoginForm = () => {
       [name]: type === 'checkbox' ? checked : value
     }));
     
-    // Real-time validation with common package
+    
     if (name === 'email') {
       validateField('email', value, 'email');
     }
@@ -45,7 +45,7 @@ const LoginForm = () => {
     }
     
     if (!formData.password) {
-      // Handle required field validation
+      
       isValid = false;
     }
     

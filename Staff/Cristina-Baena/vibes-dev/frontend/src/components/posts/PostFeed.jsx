@@ -37,10 +37,10 @@ const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
     // Update the handlePostUpdate function to handle deletions
     const handlePostUpdate = (updatedPost, deletedPostId) => {
         if (deletedPostId) {
-            // Handle post deletion
+            
             setPosts(prevPosts => prevPosts.filter(post => post.id !== deletedPostId));
         } else if (updatedPost) {
-            // Handle post update
+            
             setPosts(prevPosts => 
                 prevPosts.map(post => 
                     post.id === updatedPost.id ? updatedPost : post
@@ -49,7 +49,7 @@ const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
         }
     };
 
-    // Load posts with sorting parameter
+   
     const loadPosts = async (pageNum = 1, hashtag = null, append = false) => {
         try {
             if (!append) {
@@ -73,7 +73,7 @@ const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
                 setPosts(postsData);
             }
             
-            // Check if there are more posts
+            
             setHasMore(postsData.length === 10);
             setError('');
         } catch (error) {
@@ -152,7 +152,7 @@ const handlePostCreated = (newPost) => {
     loadHashtags();
 };
 
-    // Load more posts
+    
     const loadMorePosts = () => {
         const nextPage = page + 1;
         setPage(nextPage);

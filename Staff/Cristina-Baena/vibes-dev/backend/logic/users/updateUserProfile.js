@@ -94,7 +94,7 @@ const updateUserProfile = async (userId, updates) => {
                     throw new errors.ValidationError('Invalid Base64 image format. Must be jpeg, jpg, png, gif, or webp')
                 }
                 
-                // Check file size (Base64 is ~33% larger than original)
+                
                 const base64Data = updates.avatar.data.split(',')[1]
                 const sizeInBytes = (base64Data.length * 3) / 4
                 const maxSizeInMB = 5 // 5MB limit
@@ -104,7 +104,7 @@ const updateUserProfile = async (userId, updates) => {
                     throw new errors.ValidationError(`Image size too large. Maximum size is ${maxSizeInMB}MB`)
                 }
                 
-                // Store the base64 data in the url field as well for consistency
+                
                 updates.avatar.url = updates.avatar.data
                 break;
                 
@@ -119,7 +119,7 @@ const updateUserProfile = async (userId, updates) => {
         { new: true, runValidators: true }
     ).select('-password')
     
-    // Transform _id to id for frontend compatibility
+    
     const transformedUser = {
         ...updatedUser.toObject(),
         id: updatedUser._id.toString()

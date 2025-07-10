@@ -10,14 +10,14 @@ const getPost = async (postId) => {
         throw new errors.NotFoundError('Post not found')
     }
     
-    // Transform _id to id for frontend compatibility
+    
     const transformedPost = {
         ...post.toObject(),
         id: post._id.toString()
     }
     delete transformedPost._id
     
-    // Transform author _id to id if populated
+    
     if (transformedPost.author && transformedPost.author._id) {
         transformedPost.author = {
             ...transformedPost.author,
@@ -26,7 +26,7 @@ const getPost = async (postId) => {
         delete transformedPost.author._id
     }
     
-    // Transform comments _id and user _id to id
+    
     if (transformedPost.comments && transformedPost.comments.length > 0) {
         transformedPost.comments = transformedPost.comments.map(comment => {
             const transformedComment = {

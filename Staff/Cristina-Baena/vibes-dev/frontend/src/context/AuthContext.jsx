@@ -8,14 +8,14 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(localStorage.getItem('token'))
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate() // Add this line
+  const navigate = useNavigate() 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       fetchCurrentUser();
     } else {
-      setLoading(false); // Ensure loading state clears
+      setLoading(false); 
     }
   }, []);
 
@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
       setUser(userData)
       setLoading(false)
     } catch (error) {
-      // Token is invalid, clear it
+     
       logout()
     }
   }
@@ -69,8 +69,12 @@ const AuthProvider = ({ children }) => {
 
   const updateProfile = async (profileData) => {
     try {
+     
       const response = await updateProfileService(profileData)
+
       setUser(response)
+      
+      await fetchCurrentUser()
       return response
     } catch (error) {
       throw error
@@ -97,7 +101,8 @@ const AuthProvider = ({ children }) => {
   }
 
   const isAuthenticated = () => {
-    return !!token && !!user;
+    
+    return !!token;
 };
 
   const value = {

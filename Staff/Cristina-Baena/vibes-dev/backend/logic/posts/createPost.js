@@ -6,7 +6,6 @@ import { errors, validator } from 'common'
 const createPost = async (userId, postData) => {
     const { title, content, image, hashtags } = postData
     
-    // Validate inputs
     validator.text(title, 'title')
     validator.text(content, 'content')
     
@@ -14,7 +13,7 @@ const createPost = async (userId, postData) => {
         throw new errors.ValidationError('Post must have either content or image')
     }
     
-    // Validate user exists
+    
     const user = await User.findById(userId).select('-password')
     if (!user) {
         throw new errors.NotFoundError('User not found')
@@ -27,7 +26,6 @@ const createPost = async (userId, postData) => {
         const contentHashtags = tempPost.extractHashtags(content)
         // Combine provided hashtags with extracted hashtags, removing duplicates
         allHashtags = [...new Set([...allHashtags, ...contentHashtags])]
-        console.log('Combined hashtags:', allHashtags)
     }
     
     // Create the post
@@ -39,7 +37,7 @@ const createPost = async (userId, postData) => {
         hashtags: allHashtags
     })
     
-    // Populate author info before transformation
+    
     const populatedPost = await Post.findById(post._id).populate('author', 'username avatar')
     
     // Handle hashtags - update hashtag counts
@@ -56,7 +54,7 @@ const createPost = async (userId, postData) => {
         }
     }
     
-    // Transform _id to id for frontend compatibility
+    
     const transformedPost = {
         ...populatedPost.toObject(),
         id: populatedPost._id.toString(),

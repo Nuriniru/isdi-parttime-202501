@@ -14,8 +14,6 @@ const deleteComment = async (postId, commentId, userId) => {
         throw new errors.NotFoundError('Comment not found')
     }
     
-    // Check if user owns the comment or the post
-    // Ensure we're comparing string representations of ObjectIds
     const commentOwnerId = comment.user.toString()
     const postAuthorId = post.author.toString()
     const currentUserId = userId.toString()

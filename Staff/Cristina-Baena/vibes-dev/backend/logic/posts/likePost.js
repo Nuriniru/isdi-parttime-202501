@@ -20,14 +20,14 @@ const likePost = async (postId, userId) => {
     
     await post.save()
     
-    // Transform post _id to id for frontend compatibility
+    
     const transformedPost = {
         ...post.toObject(),
         id: post._id.toString()
     }
     delete transformedPost._id
     
-    // Return the expected structure for tests
+    
     return {
         isLiked: !isLiked, // Toggle the state
         likesCount: post.likes.length,

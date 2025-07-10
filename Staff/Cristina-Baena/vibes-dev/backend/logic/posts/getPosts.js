@@ -137,13 +137,13 @@ const getPosts = async (filters = {}) => {
         post.id = post._id.toString();
         delete post._id;
         
-        // Transform author _id to id
+        
         if (post.author && post.author._id) {
             post.author.id = post.author._id.toString()
             delete post.author._id
         }
         
-        // Transform comments _id and user _id to id
+    
         if (post.comments && post.comments.length > 0) {
             post.comments = post.comments.map(comment => {
                 if (comment._id) {

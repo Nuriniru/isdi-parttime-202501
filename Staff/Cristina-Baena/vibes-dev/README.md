@@ -58,6 +58,7 @@ Vibes App is a social media application that allows users to share posts, intera
 #### Testing & Quality
 - **Mocha & Chai**
 - **C8 Coverage**
+- **Sinon**
 - **Custom CURL Scripts**
 
 #### External APIs
@@ -166,4 +167,4 @@ Vibes App is a social media application that allows users to share posts, intera
 ```
 ### Test Coverage
 
-(![Coverage])
+![Coverage]

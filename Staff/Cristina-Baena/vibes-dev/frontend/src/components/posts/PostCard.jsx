@@ -35,7 +35,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
 
     const handleUserClick = (userId) => {
         if (isAuthenticated && user?.id === userId) {
-            navigate('/dashboard');
+            navigate('/profile'); 
         } else {
             navigate(`/user/${userId}`);
         }
@@ -59,8 +59,8 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
 
     // Handle like/unlike
     const handleLike = async () => {
-        console.log('isAuthenticated:', isAuthenticated()); // Call the function
-        if (!isAuthenticated()) { // Add parentheses to call the function
+        
+        if (!isAuthenticated()) { 
             showModal({
                 title: 'Authentication Required',
                 message: 'You need to be logged in to like posts. Would you like to login or register?',
@@ -80,7 +80,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
             setLoading(true);
             const response = await likePost(post.id);
             
-            // Remove the response.success check since postService now returns unwrapped data
+            
             setIsLiked(response.isLiked);
             setLikesCount(response.likesCount);
         } catch (error) {
@@ -91,7 +91,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
         }
     };
 
-    // Handle add comment
+    
     const handleAddComment = async (e) => {
         e.preventDefault();
         if (!isAuthenticated()) {
@@ -116,7 +116,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
             setCommentLoading(true);
             const response = await addComment(post.id, newComment.trim());
             
-            // Now response is unwrapped data
+            
             if (response.comments) {
                 setComments(response.comments);
             } else {

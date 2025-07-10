@@ -14,11 +14,11 @@ import updatePassword from '../handlers/users/updatePassword.js';
 
 const router = express.Router()
 
-// Public routes - use handlers where available
+
 router.post('/register', validateEmail, validatePassword, registerUserHandler)
 router.post('/login', validateEmail, loginUserHandler)
 
-// Protected routes - use handlers where available
+
 router.get('/me', protect, getCurrentUserHandler)
 router.get('/profile', protect, getUserProfileHandler)
 router.put('/profile', protect, validateEmail, updateUserProfileHandler)

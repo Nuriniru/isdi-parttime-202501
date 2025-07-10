@@ -9,11 +9,11 @@ const registerUser = async (email, password, username) => {
             throw new errors.DuplicityError('user already exists')
         }
         
-        // Create new user (Mongoose will handle password hashing via pre-save hook)
+        
         const newUser = new data.users({ username, email, password })
         const savedUser = await newUser.save()
         
-        // Transform for frontend compatibility
+        
         const transformedUser = {
             id: savedUser._id.toString(),
             username: savedUser.username,
@@ -29,11 +29,11 @@ const registerUser = async (email, password, username) => {
         if (error instanceof errors.DuplicityError) {
             throw error
         }
-        // Handle MongoDB duplicate key error
+       
         if (error.code === 11000) {
             throw new errors.DuplicityError('user already exists')
         }
-        // Convert other errors to ServerError
+        
         throw new errors.ServerError(error.message)
     }
 }

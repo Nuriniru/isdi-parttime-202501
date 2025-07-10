@@ -4,25 +4,25 @@ const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
 
-  // Mongoose bad ObjectId
+  
   if (err.name === 'CastError') {
     const message = 'Resource not found';
     error = { message, statusCode: 404 };
   }
 
-  // Mongoose duplicate key
+  
   if (err.code === 11000) {
     const message = 'Duplicate field value entered';
     error = { message, statusCode: 400 };
   }
 
-  // Mongoose validation error
+  
   if (err.name === 'ValidationError') {
     const message = Object.values(err.errors).map(val => val.message);
     error = { message, statusCode: 400 };
   }
 
-  // Custom errors
+  
   if (err.name === 'NotFoundError') {
     error = { message: err.message, statusCode: 404 };
   }
@@ -39,7 +39,7 @@ const errorHandler = (err, req, res, next) => {
     error = { message: err.message, statusCode: 409 };
   }
 
-  // Add DuplicityError handling
+  
   if (err.name === 'DuplicityError') {
     error = { message: err.message || 'Resource already exists', statusCode: 409 };
   }
