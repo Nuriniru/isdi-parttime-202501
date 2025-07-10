@@ -10,7 +10,6 @@ const MainLayout = () => {
   const { user, logout } = useAuth();
   const isUserLogged = !!user;
 
-  // Navigation items based on authentication state
   const navigation = isUserLogged 
     ? [
         { name: 'Dashboard', path: '/dashboard' },
@@ -26,18 +25,18 @@ const MainLayout = () => {
     logout();
   };
 
-  // Close mobile menu when route changes
+
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
   return (
     <div className="min-h-screen">
-      {/* Navigation */}
+
       <nav className="glass-nav fixed w-full z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+
             <div className="flex-shrink-0">
               <Link 
                 to="/" 
@@ -47,7 +46,6 @@ const MainLayout = () => {
               </Link>
             </div>
 
-            {/* Desktop Navigation */}
             <div className="hidden lg:block">
               <div className="flex items-center space-x-1">
                 {navigation.map((item) => (
@@ -72,7 +70,6 @@ const MainLayout = () => {
               </div>
             </div>
 
-            {/* Medium Screen Navigation (Tablet) */}
             <div className="hidden md:flex lg:hidden items-center space-x-2">
               {isUserLogged ? (
                 <>
@@ -125,7 +122,6 @@ const MainLayout = () => {
               )}
             </div>
 
-            {/* Mobile menu button */}
             <div className="flex md:hidden">
               {isUserLogged && (
                 <Link
@@ -151,7 +147,6 @@ const MainLayout = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         <div className={`md:hidden transition-all duration-300 ease-in-out ${
           isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
         }`}>
@@ -206,7 +201,6 @@ const MainLayout = () => {
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="pt-16">
         <Outlet />
       </main>

@@ -9,13 +9,11 @@ const HashtagInput = ({ value, onChange, placeholder = "Add hashtags..." }) => {
     const inputRef = useRef(null);
     const suggestionsRef = useRef(null);
 
-    // Extract hashtags from text
     const extractHashtags = (text) => {
         const hashtagRegex = /#[\w\u00c0-\u024f\u1e00-\u1eff]+/gi;
         return text.match(hashtagRegex) || [];
     };
 
-    // Search for hashtag suggestions
     const searchSuggestions = async (query) => {
         if (query.length < 2) {
             setSuggestions([]);
@@ -25,7 +23,7 @@ const HashtagInput = ({ value, onChange, placeholder = "Add hashtags..." }) => {
         setLoading(true);
         try {
             const results = await searchHashtags(query);
-            setSuggestions(results.slice(0, 5)); // Limit to 5 suggestions
+            setSuggestions(results.slice(0, 5));
         } catch (error) {
             console.error('Error searching hashtags:', error);
             setSuggestions([]);
@@ -34,18 +32,18 @@ const HashtagInput = ({ value, onChange, placeholder = "Add hashtags..." }) => {
         }
     };
 
-    // Handle input change
+
     const handleInputChange = (e) => {
         const newValue = e.target.value;
         setInputValue(newValue);
         onChange(newValue);
 
-        // Check if user is typing a hashtag
+
         const words = newValue.split(/\s+/);
         const lastWord = words[words.length - 1];
         
         if (lastWord.startsWith('#') && lastWord.length > 1) {
-            const query = lastWord.substring(1); // Remove # symbol
+            const query = lastWord.substring(1);
             searchSuggestions(query);
             setShowSuggestions(true);
         } else {
@@ -54,7 +52,7 @@ const HashtagInput = ({ value, onChange, placeholder = "Add hashtags..." }) => {
         }
     };
 
-    // Handle suggestion click
+
     const handleSuggestionClick = (hashtag) => {
         const words = inputValue.split(/\s+/);
         words[words.length - 1] = `#${hashtag.name}`;
@@ -67,7 +65,7 @@ const HashtagInput = ({ value, onChange, placeholder = "Add hashtags..." }) => {
         inputRef.current?.focus();
     };
 
-    // Handle key press
+
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -75,7 +73,7 @@ const HashtagInput = ({ value, onChange, placeholder = "Add hashtags..." }) => {
         }
     };
 
-    // Close suggestions when clicking outside
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (suggestionsRef.current && !suggestionsRef.current.contains(event.target)) {
@@ -87,7 +85,7 @@ const HashtagInput = ({ value, onChange, placeholder = "Add hashtags..." }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    // Sync with external value changes
+
     useEffect(() => {
         if (value !== inputValue) {
             setInputValue(value);
@@ -106,7 +104,7 @@ const HashtagInput = ({ value, onChange, placeholder = "Add hashtags..." }) => {
                 rows={3}
             />
             
-            {/* Hashtag suggestions dropdown */}
+
             {showSuggestions && (suggestions.length > 0 || loading) && (
                 <div 
                     ref={suggestionsRef}
@@ -131,7 +129,7 @@ const HashtagInput = ({ value, onChange, placeholder = "Add hashtags..." }) => {
                 </div>
             )}
             
-            {/* Display extracted hashtags */}
+
             {inputValue && (
                 <div className="mt-2">
                     <div className="flex flex-wrap gap-1">

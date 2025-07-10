@@ -105,7 +105,7 @@ const Register = () => {
   };
 
   const handleButtonClick = (e) => {
-    // Button click handler for form submission
+
   };
 
   return (

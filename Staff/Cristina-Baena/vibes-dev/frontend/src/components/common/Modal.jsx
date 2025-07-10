@@ -6,7 +6,7 @@ const Modal = ({
   onClose, 
   title, 
   message, 
-  type = 'info', // 'info', 'success', 'error', 'warning'
+  type = 'info',
   confirmText = 'OK',
   cancelText = 'Cancel',
   onConfirm,
@@ -56,7 +56,7 @@ const Modal = ({
   const handleConfirm = () => {
     if (onConfirm) {
         onConfirm();
-        onClose(); // Ensure modal closes after confirmation
+        onClose(); 
     } else {
         onClose();
     }
@@ -68,7 +68,7 @@ const Modal = ({
       onClick={handleBackdropClick}
     >
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 transform transition-all">
-        {/* Header */}
+
         <div className={`${currentStyle.bgColor} ${currentStyle.borderColor} border-b px-6 py-4 rounded-t-xl`}>
           <div className="flex items-center space-x-3">
             <div className={`${currentStyle.iconBg} ${currentStyle.iconColor} w-10 h-10 rounded-full flex items-center justify-center text-lg`}>
@@ -80,12 +80,12 @@ const Modal = ({
           </div>
         </div>
         
-        {/* Body */}
+
         <div className="px-6 py-4">
           <p className="text-gray-700 leading-relaxed">{message}</p>
         </div>
         
-        {/* Footer */}
+
         <div className="px-6 py-4 bg-gray-50 rounded-b-xl flex justify-end space-x-3">
           {showCancel && (
             <Button

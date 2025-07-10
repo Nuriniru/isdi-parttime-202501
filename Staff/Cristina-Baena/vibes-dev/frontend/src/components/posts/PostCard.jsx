@@ -57,7 +57,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
         }
     };
 
-    // Handle like/unlike
+
     const handleLike = async () => {
         
         if (!isAuthenticated()) { 
@@ -120,7 +120,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
             if (response.comments) {
                 setComments(response.comments);
             } else {
-                // Add the new comment to existing ones
+
                 setComments(prevComments => [...prevComments, response]);
             }
             setNewComment('');
@@ -132,7 +132,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
         }
     };
 
-    // Handle toggle comments - separate function at component level
+
     const handleToggleComments = () => {
         if (!isAuthenticated()) {
             showModal({
@@ -152,7 +152,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
         setShowComments(!showComments);
     };
 
-    // Handle edit post
+
     const handleEditPost = async () => {
         if (!editTitle.trim() || !editContent.trim()) {
             showWarning('Title and content are required', 'Missing Information');
@@ -181,7 +181,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
         }
     };
 
-    // Handle delete post
+
     const handleDeletePost = () => {
         showConfirm(
             'Are you sure you want to delete this post? This action cannot be undone.',
@@ -211,7 +211,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
         );
     };
 
-    // Cancel edit
+    
     const handleCancelEdit = () => {
         setEditTitle(post.title);
         setEditContent(post.content);
@@ -220,7 +220,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
 
     return (
         <div className="glass-card p-6 mb-4">
-            {/* Post Header with Avatar and Edit/Delete buttons */}
+
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center space-x-3">
                     <Avatar user={post.author} size="md" />
@@ -315,7 +315,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
                 )}
             </div>
             
-            {/* Hashtags Display */}
+
             {post.hashtags && post.hashtags.length > 0 && (
                 <div className="mb-4">
                     <div className="flex flex-wrap gap-2">
@@ -332,7 +332,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
                 </div>
             )}
             
-            {/* Post Image */}
+
             {post.image?.url && (
                 <div className="mb-4">
                     <img 
@@ -357,10 +357,10 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
                 </div>
             )}
             
-            {/* Post Actions */}
+
             <div className="border-t pt-4">
                 <div className="flex items-center space-x-4 mb-4">
-                    {/* Like Button */}
+
                     <button 
                         onClick={handleLike}
                         disabled={loading}
@@ -386,9 +386,9 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
                         <span>{likesCount}</span>
                     </button>
                     
-                    {/* Comment Button */}
+
                     <button 
-                        onClick={handleToggleComments} // Change this line
+                        onClick={handleToggleComments} 
                         className="flex items-center space-x-2 text-gray-500 hover:text-blue-500 transition-colors"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -403,10 +403,10 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
                     </button>
                 </div>
                 
-                {/* Comments Section */}
+
                 {showComments && (
                     <div className="space-y-4">
-                        {/* Add Comment Form */}
+
                         {isAuthenticated && (
                             <form onSubmit={handleAddComment} className="flex space-x-3">
                                 <Avatar user={user} size="sm" />
@@ -431,7 +431,7 @@ const PostCard = ({ post, onHashtagClick, onPostUpdate }) => {
                             </form>
                         )}
                         
-                        {/* Comments List */}
+
                         <div className="space-y-3">
                             {comments?.map((comment) => (
                                 <div key={comment.id} className="flex space-x-3">

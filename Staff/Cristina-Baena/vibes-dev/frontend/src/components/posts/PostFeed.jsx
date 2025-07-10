@@ -16,7 +16,6 @@ const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [selectedHashtag, setSelectedHashtag] = useState(() => {
-        // Initialize selectedHashtag from URL on component mount
         return searchParams.get('hashtag') || null;
     });
     const [trendingHashtags, setTrendingHashtags] = useState([]);
@@ -26,7 +25,6 @@ const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
     const [hasMore, setHasMore] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
 
-    // Check for hashtag in URL parameters on component mount
     useEffect(() => {
         const hashtagFromUrl = searchParams.get('hashtag');
         if (hashtagFromUrl !== selectedHashtag) {
@@ -34,7 +32,6 @@ const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
         }
     }, [searchParams]);
 
-    // Update the handlePostUpdate function to handle deletions
     const handlePostUpdate = (updatedPost, deletedPostId) => {
         if (deletedPostId) {
             
@@ -88,7 +85,6 @@ const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
         }
     };
 
-    // Load hashtags
     const loadHashtags = async () => {
         try {
             const [trendingResponse, popularResponse] = await Promise.all([
@@ -103,21 +99,17 @@ const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
         }
     };
 
-    // Initial load - only trigger when selectedHashtag changes or on mount
     useEffect(() => {
         const hashtagFromUrl = searchParams.get('hashtag') || null;
         
-        // Load posts with the hashtag from URL
         loadPosts(1, hashtagFromUrl);
         loadHashtags();
         setPage(1);
-        
-        // Update selectedHashtag state to match URL
         setSelectedHashtag(hashtagFromUrl);
     }, [searchParams, sortBy]); 
     
 
-    // Handle hashtag filter with URL update
+
     const handleHashtagClick = (hashtag) => {
         setSelectedHashtag(hashtag);
         setPage(1);
@@ -125,30 +117,25 @@ const PostFeed = ({ sortBy = 'likes', onPostCreated }) => {
         setSearchParams({ hashtag });
     };
 
-    // Clear hashtag filter with URL update
+
     const clearHashtagFilter = () => {
         setSelectedHashtag(null);
         setPage(1);
-        // Clear URL parameter
         setSearchParams({});
     };
 
-    // Handle post creation
 const handlePostCreated = (newPost) => {
     setPosts(prev => {
-        // Ensure prev is always an array
         const prevArray = Array.isArray(prev) ? prev : [];
-        // Extract the actual post data from the response
         const postData = newPost.data || newPost;
         
-        // Check if post already exists to prevent duplicates
         if (postData.id && prevArray.some(post => post.id === postData.id)) {
             return prevArray;
         }
         
         return [postData, ...prevArray];
     });
-    // Refresh hashtags
+
     loadHashtags();
 };
 
@@ -161,7 +148,6 @@ const handlePostCreated = (newPost) => {
 
     return (
         <div className="max-w-7xl mx-auto p-4">
-            {/* Header */}
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
                 <h1 className="text-2xl font-bold text-gray-900">
                     {selectedHashtag ? `Posts tagged #${selectedHashtag}` : 'Latest Vibes'}
@@ -176,9 +162,7 @@ const handlePostCreated = (newPost) => {
                 )}
             </div>
 
-            {/* Filter Bar */}
             <div className="mb-6">
-                {/* Active Filter */}
                 {selectedHashtag && (
                     <div className="flex items-center mb-4">
                         <span className="text-sm text-gray-600 mr-2">Filtering by:</span>
@@ -194,9 +178,8 @@ const handlePostCreated = (newPost) => {
                     </div>
                 )}
 
-                {/* Hashtag Categories */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {/* Trending Hashtags */}
+
                     {trendingHashtags.length > 0 && (
                         <div>
                             <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center">

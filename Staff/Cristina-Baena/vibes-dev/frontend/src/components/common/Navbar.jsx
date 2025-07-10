@@ -26,7 +26,6 @@ const Navbar = ({
   
   return (
     <nav className={classes} {...props}>
-      {/* Brand/Logo */}
       {brand && (
         <div className="flex items-center">
           {typeof brand === 'string' ? (
@@ -39,7 +38,6 @@ const Navbar = ({
         </div>
       )}
       
-      {/* Navigation Links */}
       {links.length > 0 && (
         <div className="flex items-center space-x-6">
           {links.map((link, index) => (
@@ -53,7 +51,7 @@ const Navbar = ({
           ))}
         </div>
       )}
-      // In the navbar component, replace the user section with:
+
       {user && (
         <div className="flex items-center space-x-4">
           <Link to="/profile">

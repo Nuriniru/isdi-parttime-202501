@@ -18,7 +18,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
     const [error, setError] = useState(null);
     const [showImageSelector, setShowImageSelector] = useState(false);
 
-    // Handle form input changes
+    
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -35,9 +35,9 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
         }));
     };
 
-    // Handle image selection
+
     const handleImageSelect = (imageData) => {
-        // console.log('CreatePostModal: Image selected:', imageData);
+
         setFormData(prev => ({
             ...prev,
             image: {
@@ -53,7 +53,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
         setShowImageSelector(false);
     };
 
-    // Remove selected image
+
     const handleRemoveImage = () => {
         setFormData(prev => ({
             ...prev,
@@ -61,14 +61,13 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
         }));
     };
 
-    // Handle form submission
+
     const { validationErrors, validateField, clearErrors } = useValidation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         clearErrors(); 
         
-        // Use common package text validator
         try {
           validator.text(formData.title.trim(), 100, 1, 'Title');
           validator.text(formData.content.trim(), 2000, 1, 'Content');
@@ -93,15 +92,15 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
             const newPost = await createPost(postData);
             console.log('Created post response:', newPost);
             
-            // Reset form
+           
             setFormData({ title: '', content: '', image: null });
             
-            // Notify parent component
+            
             if (onPostCreated) {
                 onPostCreated(newPost);
             }
             
-            // Close modal
+            
             onClose();
         } catch (error) {
             console.error('Error creating post:', error);
@@ -111,7 +110,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
         }
     };
 
-    // Handle modal close
+    
     const handleClose = () => {
         if (!loading) {
             setFormData({ title: '', content: '', image: null });
@@ -126,7 +125,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
     const modalContent = (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999] p-4">
             <div className="glass-card rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                {/* Modal Header */}
+
                 <div className="flex items-center justify-between p-6 border-b border-white/20">
                     <h2 className="text-xl font-semibold text-white">Create New Post</h2>
                     <button
@@ -140,16 +139,15 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
                     </button>
                 </div>
 
-                {/* Modal Body */}
                 <form onSubmit={handleSubmit} className="p-6">
-                    {/* Error Message */}
+
                     {error && (
                         <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
                             {error}
                         </div>
                     )}
 
-                    {/* Title Input */}
+
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-white mb-2">
                             Title <span className="text-red-400">*</span>
@@ -166,7 +164,6 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
                         />
                     </div>
 
-                    {/* Content Input with Hashtags */}
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-white mb-2">
                             Content <span className="text-red-400">*</span>
@@ -181,7 +178,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
                         </p>
                     </div>
 
-                    {/* Image Section */}
+
                     <div className="mb-6">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Image (Optional)
@@ -241,7 +238,7 @@ const CreatePostModal = ({ isOpen, onClose, onPostCreated }) => {
                         )}
                     </div>
 
-                    {/* Modal Footer */}
+
                     <div className="flex items-center justify-end space-x-3 pt-4 border-t">
                         <Button
                             type="button"

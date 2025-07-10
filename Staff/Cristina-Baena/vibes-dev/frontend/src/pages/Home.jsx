@@ -9,7 +9,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600-70 via-purple-700 to-purple-900">
-      {/* Hero Section */}
+
       <div className="relative overflow-hidden">
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
@@ -42,7 +42,6 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Latest Vibes Section */}
       <div className="glass-card mx-4 my-8">
         <div className="container mx-auto px-4 py-12">
           <div className="text-center mb-8">
@@ -54,7 +53,6 @@ const Home = () => {
             </p>
           </div>
           
-          {/* Post Feed */}
          
           <PostFeed sortBy="likes" />
         </div>

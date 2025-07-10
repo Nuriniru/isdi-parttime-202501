@@ -132,7 +132,7 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
                     mimeType: file.type,
                     size: file.size
                 });
-                setError(null); // Clear any previous errors
+                setError(null); 
             };
             reader.onerror = () => {
                 console.error('ImageSelector: Error reading file');
@@ -142,14 +142,14 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
         }
     };
 
-    // Handle selecting the uploaded image
+
     const handleUploadedImageSelect = () => {
         if (uploadedImage && typeof onImageSelect === 'function') {
             onImageSelect(uploadedImage);
         }
     };
 
-    // Clear uploaded image when switching tabs
+
     const handleTabChange = (tab) => {
         setSelectedTab(tab);
         setError(null);
@@ -160,7 +160,7 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
 
     return (
         <div className="image-selector glass-card rounded-lg shadow-lg p-6">
-            {/* Tab Navigation */}
+
             <div className="flex mb-4 border-b">
                 <button
                     type="button"
@@ -182,7 +182,7 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
 
             {selectedTab === 'pexels' && (
                 <>
-                    {/* Search Input with Button */}
+
                     <div className="search-container mb-4 flex gap-2">
                         <input
                             type="text"
@@ -201,14 +201,14 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
                         </button>
                     </div>
                     
-                    {/* Error Message */}
+
                     {error && (
                         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                             {error}
                         </div>
                     )}
                     
-                    {/* Images Grid */}
+
                     {loading ? (
                         <div className="flex justify-center items-center h-32">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -240,7 +240,7 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
 
             {selectedTab === 'upload' && allowUpload && (
                 <div className="upload-container">
-                    {/* Error Message */}
+
                     {error && (
                         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                             {error}
@@ -268,7 +268,7 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {/* Image Preview */}
+
                             <div className="relative">
                                 <img
                                     src={uploadedImage.url}
@@ -281,7 +281,7 @@ const ImageSelector = ({ onImageSelect, allowUpload = false }) => {
                                 </div>
                             </div>
                             
-                            {/* Action Buttons */}
+
                             <div className="flex gap-2">
                                 <button
                                     type="button"

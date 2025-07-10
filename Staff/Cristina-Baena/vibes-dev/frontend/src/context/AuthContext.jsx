@@ -38,7 +38,6 @@ const AuthProvider = ({ children }) => {
       setToken(response.data.token)
       setUser(response.data)
       
-      // Fetch complete user profile
       try {
         const userData = await getCurrentUser()
         setUser(userData)

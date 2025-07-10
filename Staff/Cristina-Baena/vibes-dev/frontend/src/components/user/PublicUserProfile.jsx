@@ -17,7 +17,6 @@ const PublicUserProfile = () => {
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
 
-    // Load user posts
     const loadUserPosts = async (pageNum = 1, append = false) => {
         try {
             
@@ -52,14 +51,13 @@ const PublicUserProfile = () => {
         }
     };
 
-    // Load more posts
     const loadMorePosts = () => {
         const nextPage = page + 1;
         setPage(nextPage);
         loadUserPosts(nextPage, true);
     };
 
-    // Handle post updates
+
     const handlePostUpdate = (updatedPost, deletedPostId) => {
         if (deletedPostId) {
             setPosts(prevPosts => prevPosts.filter(post => post.id !== deletedPostId));
@@ -98,7 +96,6 @@ const PublicUserProfile = () => {
 
     return (
         <div className="max-w-4xl mx-auto px-4 py-6">
-            {/* User Profile Header */}
             {userInfo && (
                 <div className="bg-white rounded-lg shadow-md p-6 mb-6">
                     <div className="flex items-center space-x-6">
@@ -119,7 +116,6 @@ const PublicUserProfile = () => {
                 </div>
             )}
 
-            {/* Posts Section */}
             <div className="space-y-6">
                 <h2 className="text-2xl font-bold text-gray-900">
                     {userInfo?.username}'s Posts
@@ -135,7 +131,6 @@ const PublicUserProfile = () => {
                             />
                         ))}
                         
-                        {/* Load More Button */}
                         {hasMore && (
                             <div className="flex justify-center mt-8">
                                 <Button

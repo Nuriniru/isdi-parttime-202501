@@ -110,7 +110,6 @@ const Avatar = ({
                     </div>
                 )}
                 
-                {/* Online indicator for larger sizes */}
                 {(size === 'lg' || size === 'xl' || size === '2xl') && (
                     <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
                 )}
