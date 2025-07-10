@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import likePost from './likePost.js'
-import { data } from '../../data/index.js'  // Changed from: import data from '../../data/index.js'
+import { data } from '../../data/index.js'  
 import bcrypt from 'bcryptjs'
 
 describe('likePost', () => {
@@ -11,7 +11,7 @@ describe('likePost', () => {
     })
 
     beforeEach(async () => {
-        // Create test user
+
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         const user = await data.users.create({
             username: 'testuser',
@@ -20,7 +20,7 @@ describe('likePost', () => {
         })
         testUserId = user._id.toString()
 
-        // Create test post
+
         const post = await data.posts.create({
             title: 'Test Post',
             content: 'Test content',
@@ -39,7 +39,7 @@ describe('likePost', () => {
     })
 
     it('GIVEN valid post and user WHEN likePost called THEN adds like successfully', async () => {
-        // Fix: Correct parameter order
+
         const result = await likePost(testPostId, testUserId)
 
         expect(result.isLiked).to.be.true
@@ -47,10 +47,10 @@ describe('likePost', () => {
     })
 
     it('GIVEN already liked post WHEN likePost called THEN removes like (unlike)', async () => {
-        // First like
+
         await likePost(testPostId, testUserId)
         
-        // Unlike
+
         const result = await likePost(testPostId, testUserId)
 
         expect(result.isLiked).to.be.false

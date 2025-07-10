@@ -46,7 +46,6 @@ const UserProfile = () => {
         bio: formData.bio
       }
 
-      // Only include password if user wants to change it
       if (formData.newPassword) {
         if (formData.newPassword !== formData.confirmPassword) {
           setErrors({ confirmPassword: 'Passwords do not match' })
@@ -82,7 +81,6 @@ const UserProfile = () => {
       const result = await deleteAccount()
       if (result.success) {
         showSuccess('Account deleted successfully!');
-        // Account deleted, user will be logged out automatically
       } else {
         showError(result.error || 'Failed to delete account');
       }
@@ -103,7 +101,7 @@ const UserProfile = () => {
   const [userPosts, setUserPosts] = useState([]);
   const [postsLoading, setPostsLoading] = useState(false);
   const [showPosts, setShowPosts] = useState(true);
-  // Change the function call
+
   const loadMyPosts = async () => {
       if (!user?.id) return;
       
@@ -118,14 +116,14 @@ const UserProfile = () => {
       }
   };
   
-  // Add useEffect to load posts when component mounts
+
   useEffect(() => {
     if (user?.id) {
       loadMyPosts();
     }
   }, [user?.id]);
   
-  // Add this function to handle post updates
+
   const handlePostUpdate = (updatedPost, deletedPostId) => {
     if (deletedPostId) {
       setUserPosts(prevPosts => prevPosts.filter(post => post.id !== deletedPostId));
@@ -143,7 +141,6 @@ const UserProfile = () => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <h1 className="text-2xl font-bold text-gray-900 mb-6">Profile Settings</h1>
           
-          {/* Avatar Section */}
           <div className="mb-8">
             <AvatarSelector />
           </div>
@@ -246,7 +243,7 @@ const UserProfile = () => {
                 </p>
               </div>
               
-              {/* Add Edit Profile Button */}
+
               <div className="pt-4">
                 <Button
                   onClick={() => setIsEditing(true)}
@@ -300,7 +297,7 @@ const UserProfile = () => {
           {!showDeleteConfirm ? (
             <Button
               variant="danger"
-              onClick={handleDeleteClick}  // Changed from setShowDeleteConfirm(true)
+              onClick={handleDeleteClick} 
               disabled={loading}
             >
               Delete Account
@@ -331,7 +328,6 @@ const UserProfile = () => {
       </div>
     </div>
     
-    {/* Add Modal component at the end */}
     <Modal
       isOpen={modal.isOpen}
       onClose={hideModal}

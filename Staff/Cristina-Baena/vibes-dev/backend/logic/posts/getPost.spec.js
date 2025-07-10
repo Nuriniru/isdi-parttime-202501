@@ -12,14 +12,14 @@ describe('getPost', () => {
     })
 
     beforeEach(async () => {
-        // Clean up any existing test data first
+
         await Promise.all([
             data.posts.deleteMany({ title: { $regex: /test.*post/i } }),
             data.users.deleteMany({ email: { $regex: /test.*@.*/ } }),
             data.users.deleteMany({ username: { $regex: /testuser.*/ } })
         ])
         
-        // Create a test user
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         const user = await data.users.create({
@@ -29,7 +29,7 @@ describe('getPost', () => {
         })
         testUserId = user._id.toString()
         
-        // Create a test post
+
         const post = await data.posts.create({
             title: 'Test Post',
             content: 'This is a test post content',
@@ -37,7 +37,6 @@ describe('getPost', () => {
         })
         testPostId = post._id.toString()
         
-        // Create a test post with comments
         const postWithComments = await data.posts.create({
             title: 'Test Post with Comments',
             content: 'This is a test post with comments',

@@ -18,7 +18,6 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Welcome Header */}
       <div className="glass-card mx-4 mt-6 mb-6">
         <div className="max-w-7xl mx-auto p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -53,7 +52,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Main Content - Post Feed */}
       <div className="py-6">
           <PostFeed sortBy="recent" />
       </div>

@@ -18,7 +18,6 @@ const updatePassword = async (req, res, next) => {
             newPasswordLength: newPassword?.length
         });
 
-        // Validate inputs
         if (!currentPassword) {
             console.log('ERROR: Current password missing');
             throw new errors.ValidationError('Current password is required');

@@ -5,7 +5,7 @@ import { errors, validator } from 'common'
 const updatePost = async (postId, userId, updateData) => {
     const { title, content, image, hashtags } = updateData
     
-    // Validate inputs if provided
+
     if (title !== undefined) {
         if (typeof title !== 'string' || title.trim().length === 0) {
             throw new errors.ValidationError('Title must be a non-empty string')
@@ -23,28 +23,27 @@ const updatePost = async (postId, userId, updateData) => {
         throw new errors.NotFoundError('Post not found')
     }
     
-    // Check if user owns the post
+
     if (post.author.toString() !== userId.toString()) {
         throw new errors.UnauthorizedError('Not authorized to update this post')
     }
-    
-    // Store old hashtags for count updates
+
     const oldHashtags = [...post.hashtags]
     
-    // Determine new hashtags
+
     let newHashtags
     if (hashtags !== undefined) {
-        // If hashtags are explicitly provided, use them
+
         newHashtags = hashtags
     } else if (content && content !== post.content) {
-        // If content changed but no hashtags provided, extract from content
+
         newHashtags = post.extractHashtags(content)
     } else {
-        // Keep existing hashtags
+
         newHashtags = post.hashtags
     }
     
-    // Update post fields
+
     post.title = title || post.title
     post.content = content || post.content
     post.image = image || post.image
@@ -52,19 +51,19 @@ const updatePost = async (postId, userId, updateData) => {
     
     const updatedPost = await post.save()
     
-    // Update hashtag counts
+
     await updateHashtagCountsAfterEdit(oldHashtags, newHashtags)
     
     await updatedPost.populate('author', 'username avatar')
     
-    // Transform _id to id for frontend compatibility
+
     const transformedPost = {
         ...updatedPost.toObject(),
         id: updatedPost._id.toString()
     }
     delete transformedPost._id
     
-    // Transform author _id to id if populated
+
     if (transformedPost.author && transformedPost.author._id) {
         transformedPost.author = {
             ...transformedPost.author,
@@ -76,18 +75,17 @@ const updatePost = async (postId, userId, updateData) => {
     return transformedPost
 }
 
-// Helper function to update hashtag counts after edit
+
 const updateHashtagCountsAfterEdit = async (oldHashtags, newHashtags) => {
-    // Decrease counts for removed hashtags
+
     const removedTags = oldHashtags.filter(tag => !newHashtags.includes(tag))
     await decreaseHashtagCounts(removedTags)
-    
-    // Increase counts for new hashtags
+
     const addedTags = newHashtags.filter(tag => !oldHashtags.includes(tag))
     await updateHashtagCounts(addedTags)
 }
 
-// Helper function to update hashtag counts
+
 const updateHashtagCounts = async (hashtags) => {
     for (const tag of hashtags) {
         await Hashtag.findOneAndUpdate(
@@ -101,7 +99,7 @@ const updateHashtagCounts = async (hashtags) => {
     }
 }
 
-// Helper function to decrease hashtag counts
+
 const decreaseHashtagCounts = async (hashtags) => {
     for (const tag of hashtags) {
         const hashtag = await Hashtag.findOne({ name: tag.toLowerCase() })

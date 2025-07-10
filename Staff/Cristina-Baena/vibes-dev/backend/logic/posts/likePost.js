@@ -11,10 +11,10 @@ const likePost = async (postId, userId) => {
     const isLiked = post.likes.includes(userId)
     
     if (isLiked) {
-        // Unlike the post
+
         post.likes = post.likes.filter(id => id.toString() !== userId.toString())
     } else {
-        // Like the post
+
         post.likes.push(userId)
     }
     
@@ -29,9 +29,9 @@ const likePost = async (postId, userId) => {
     
     
     return {
-        isLiked: !isLiked, // Toggle the state
+        isLiked: !isLiked, 
         likesCount: post.likes.length,
-        post: transformedPost // Include the transformed post
+        post: transformedPost 
     }
 }
 

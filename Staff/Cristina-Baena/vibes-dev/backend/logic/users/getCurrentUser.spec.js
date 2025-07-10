@@ -19,7 +19,7 @@ describe('getCurrentUser', () => {
     })
 
     beforeEach(async () => {
-        // Create a test user
+
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         const user = await data.users.create({
             username: 'testuser',
@@ -40,7 +40,7 @@ describe('getCurrentUser', () => {
         expect(result.username).to.equal('testuser')
         expect(result.email).to.equal('test@example.com')
         expect(result.password).to.be.undefined
-        expect(result.id).to.equal(userId)  // Changed from result._id.toString()
+        expect(result.id).to.equal(userId) 
     })
 
     it('GIVEN invalid user ID WHEN getCurrentUser called THEN throws NotFoundError', async () => {

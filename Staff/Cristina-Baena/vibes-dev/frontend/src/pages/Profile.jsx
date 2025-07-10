@@ -26,11 +26,10 @@ function Profile() {
     const [profilePicture, setProfilePicture] = useState(null);
     const [uploading, setUploading] = useState(false);
     
-    // Edit profile states
     const [avatarSelectorKey, setAvatarSelectorKey] = useState(0);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showAvatarSelector, setShowAvatarSelector] = useState(false);
-    const [previewAvatar, setPreviewAvatar] = useState(null); // Add preview state
+    const [previewAvatar, setPreviewAvatar] = useState(null); 
     const [editForm, setEditForm] = useState({
         username: '',
         email: '',
@@ -42,16 +41,16 @@ function Profile() {
     const [updating, setUpdating] = useState(false);
     const [errors, setErrors] = useState({});
 
-    // Handle hashtag click - navigate to dashboard with hashtag filter
+
     const handleHashtagClick = (hashtag) => {
        
         navigate(`/dashboard?hashtag=${encodeURIComponent(hashtag)}`);
     };
 
-    // Handle post update for filtering
+
     const handlePostUpdate = (updatedPost, deletedPostId) => {
         if (deletedPostId) {
-            // Handle post deletion
+
             if (activeTab === 'myPosts') {
                 setUserPosts(prevPosts => prevPosts.filter(post => post.id !== deletedPostId));
             } else if (activeTab === 'likedPosts') {
@@ -60,7 +59,7 @@ function Profile() {
                 setCommentedPosts(prevPosts => prevPosts.filter(post => post.id !== deletedPostId));
             }
         } else if (updatedPost) {
-            // Handle post update
+
             if (activeTab === 'myPosts') {
                 setUserPosts(prevPosts => 
                     prevPosts.map(post => 
@@ -94,7 +93,6 @@ function Profile() {
         }
     }, [activeTab]);
 
-    // Update edit form when userProfile changes
     useEffect(() => {
         if (userProfile) {
             setEditForm({
@@ -196,12 +194,12 @@ function Profile() {
         }
     };
 
-    // Image preview handler (doesn't save immediately)
+
     const handleImagePreview = (imageData) => {
         setPreviewAvatar(imageData);
     };
 
-    // Avatar selection handler (actually saves the avatar)
+
     const handleAvatarSelect = async (imageData) => {
         try {
             setUpdating(true);
@@ -211,7 +209,6 @@ function Profile() {
                 alt: imageData.alt || imageData.originalName || 'User avatar'
             };
     
-            // Handle different avatar sources
             if (imageData.source === 'upload') {
                 avatarData.url = imageData.url;
                 avatarData.thumbnail = imageData.url;
@@ -232,7 +229,6 @@ function Profile() {
     
             const updatedUser = await updateProfile({ avatar: avatarData });
             
-            // Force a fresh fetch of the user profile to ensure we have the latest data
             await fetchUserProfile();
             
             setShowAvatarSelector(false);
@@ -247,7 +243,6 @@ function Profile() {
         }
     };
 
-    // Edit profile functionality
     const handleEditProfile = () => {
         setShowEditModal(true);
     };
@@ -258,7 +253,7 @@ function Profile() {
             ...prev,
             [name]: value
         }));
-        // Clear errors when user starts typing
+
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
@@ -278,14 +273,13 @@ function Profile() {
                 confirmPassword: editForm.confirmPassword ? '***filled***' : 'empty'
             });
             
-            // Check if user wants to update password
             const isPasswordUpdate = editForm.currentPassword && editForm.newPassword && editForm.confirmPassword;
             console.log('Is password update?', isPasswordUpdate);
             
             if (isPasswordUpdate) {
                 console.log('=== ENTERING PASSWORD UPDATE LOGIC ===');
                 
-                // Validate password fields
+
                 if (editForm.newPassword !== editForm.confirmPassword) {
                     setErrors({ confirmPassword: 'Passwords do not match' });
                     setUpdating(false);
@@ -307,7 +301,6 @@ function Profile() {
                     console.log('Password updated successfully');
                     showSuccess('Password updated successfully!');
                     
-                    // Clear password fields after successful update
                     setEditForm(prev => ({
                         ...prev,
                         currentPassword: '',
@@ -324,18 +317,15 @@ function Profile() {
                 }
             }
             
-            // Update profile information (username, email, bio)
             const updateData = {
                 username: editForm.username,
                 email: editForm.email,
                 bio: editForm.bio
             };
             
-            console.log('Updating profile data:', updateData);
             const result = await updateProfile(updateData);
             
             if (result.success !== false) {
-                // Update local state immediately
                 setUserProfile(prev => ({
                     ...prev,
                     username: editForm.username,
@@ -347,7 +337,6 @@ function Profile() {
                 setShowAvatarSelector(false);
                 setPreviewAvatar(null);
                 
-                // Refetch posts to update author information
                 if (activeTab === 'myPosts') {
                     fetchUserPosts();
                 } else if (activeTab === 'likedPosts') {
@@ -372,8 +361,7 @@ function Profile() {
     const handleCancel = () => {
         setShowEditModal(false);
         setShowAvatarSelector(false);
-        setPreviewAvatar(null); // Clear preview on cancel
-        // Reset all form fields to original values
+        setPreviewAvatar(null);
         setEditForm({
             username: userProfile?.username || '',
             email: userProfile?.email || '',
@@ -383,11 +371,9 @@ function Profile() {
             confirmPassword: ''
         });
         setErrors({});
-        // Force ImageSelector to reset by changing its key
         setAvatarSelectorKey(prev => prev + 1);
     };
 
-    // Calculate stats
     const totalPosts = Array.isArray(userPosts) ? userPosts.length : 0;
     const totalLikes = Array.isArray(userPosts) ? userPosts.reduce((total, post) => {
         return total + (post.likes?.length || 0);
@@ -396,14 +382,12 @@ function Profile() {
         return total + (post.comments?.length || 0);
     }, 0) : 0;
 
-    // Show loading spinner while userProfile is being fetched
     if (!userProfile) {
         return <LoadingSpinner />;
     }
 
     return (
         <div className="max-w-4xl mx-auto p-6">
-            {/* Profile Header with Glass Design */}
             <div className="glass-card rounded-lg border border-white/20 p-6 mb-6">
                 <div className="flex items-center space-x-6">
                     <div className="relative">
@@ -412,7 +396,7 @@ function Profile() {
                             size="xl"
                             className="ring-4 ring-purple-400/30"
                         />
-                        {/* Remove the clickable file input overlay */}
+
                     </div>
                     <div className="flex-1">
                         <h1 className="text-2xl font-bold text-white">{userProfile?.username || 'Unknown User'}</h1>
@@ -421,7 +405,6 @@ function Profile() {
                             <p className="text-white/80 mt-2 italic">"{userProfile.bio}"</p>
                         )}
                         
-                        {/* Stats */}
                         <div className="flex space-x-6 mt-4">
                             <div className="text-center">
                                 <div className="text-xl font-bold text-white">{totalPosts}</div>
@@ -438,7 +421,6 @@ function Profile() {
                         </div>
                     </div>
                     
-                    {/* Edit Profile Button */}
                     <div className="flex flex-col space-y-2">
                         <button
                             onClick={handleEditProfile}
@@ -452,7 +434,6 @@ function Profile() {
                     </div>
                 </div>
                 
-                {/* Tab Navigation inside the glass card */}
                 <div className="mt-6 pt-4 border-t border-white/10">
                     <nav className="flex space-x-4 justify-center">
                         <button
@@ -489,7 +470,6 @@ function Profile() {
                 </div>
             </div>
 
-            {/* Posts Content */}
             <div className="space-y-6">
                 {loading ? (
                     <LoadingSpinner />
@@ -553,13 +533,11 @@ function Profile() {
                 )}
             </div>
 
-            {/* Edit Profile Modal with Integrated Avatar Selection */}
             {showEditModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
                     <div className="glass-card rounded-lg border border-white/20 p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
                         <h2 className="text-xl font-bold text-white mb-6">Edit Profile</h2>
                         <form onSubmit={handleUpdateProfile} className="space-y-6">
-                            {/* Avatar Section */}
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold text-white/90">Profile Picture</h3>
                                 
@@ -567,7 +545,7 @@ function Profile() {
                                     <div className="flex flex-col items-center space-y-4">
                                         <div className="relative">
                                             <Avatar
-                                                user={userProfile} // This will show the new avatar immediately
+                                                user={userProfile} 
                                                 size="xl"
                                                 className="ring-4 ring-purple-400/30"
                                             />
@@ -627,7 +605,6 @@ function Profile() {
                                             />
                                         </div>
                                         
-                                        {/* Preview and Save/Cancel buttons */}
                                         {previewAvatar && (
                                             <div className="mt-4 space-y-4">
                                                 <div className="flex justify-center">
@@ -662,7 +639,6 @@ function Profile() {
                                 )}
                             </div>
 
-                            {/* Profile Information */}
                             <div className="space-y-4">
                                 <h3 className="text-lg font-semibold text-white/90">Profile Information</h3>
                                 <div className="space-y-4">
@@ -725,7 +701,6 @@ function Profile() {
                                 </div>
                             </div>
 
-                            {/* Change Password Section */}
                             <div className="space-y-4 pt-4 border-t border-white/10">
                                 <h3 className="text-lg font-semibold text-white/90">Change Password</h3>
                                 <p className="text-sm text-white/60">Leave blank to keep current password</p>
@@ -814,7 +789,6 @@ function Profile() {
                 </div>
             )}
 
-            {/* Modal for notifications */}
             <Modal
                 isOpen={modal.isOpen}
                 onClose={hideModal}

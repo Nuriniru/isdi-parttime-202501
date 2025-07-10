@@ -42,7 +42,7 @@ describe('updateUserProfile', () => {
         })
     })
 
-    // Basic successful updates
+
     it('GIVEN valid data WHEN updateUserProfile called THEN updates user successfully', async () => {
         const updateData = {
             username: 'updateduser',
@@ -75,7 +75,7 @@ describe('updateUserProfile', () => {
         expect(result.bio).to.equal('New bio')
     })
 
-    // Validation errors - Fixed to remove expect.fail()
+
     it('GIVEN null updates WHEN updateUserProfile called THEN throws ValidationError', async () => {
         let error
         try {
@@ -130,7 +130,7 @@ describe('updateUserProfile', () => {
         expect(error).to.be.instanceOf(errors.NotFoundError)
     })
 
-    // Duplicity errors
+
     it('GIVEN duplicate email WHEN updateUserProfile called THEN throws DuplicityError', async () => {
         await data.users.create({
             username: 'otheruser',
@@ -163,7 +163,7 @@ describe('updateUserProfile', () => {
         throw new Error('Expected DuplicityError to be thrown')
     })
 
-    // Avatar tests - successful cases
+
     it('GIVEN default avatar WHEN updateUserProfile called THEN updates successfully', async () => {
         const result = await updateUserProfile(userId, {
             avatar: {
@@ -203,15 +203,13 @@ describe('updateUserProfile', () => {
         expect(result.avatar.url).to.equal(validBase64)
     })
 
-    // Add these test cases after the existing avatar tests:
 
-    // Avatar validation error tests
     it('GIVEN avatar without source WHEN updateUserProfile called THEN throws ValidationError', async () => {
         try {
             await updateUserProfile(userId, {
                 avatar: {
                     url: 'https://example.com/avatar.jpg'
-                    // missing source
+                    
                 }
             })
             throw new Error('Expected ValidationError to be thrown')
@@ -241,7 +239,7 @@ describe('updateUserProfile', () => {
             await updateUserProfile(userId, {
                 avatar: {
                     source: 'default'
-                    // missing url
+                    
                 }
             })
             throw new Error('Expected ValidationError to be thrown')
@@ -257,7 +255,7 @@ describe('updateUserProfile', () => {
                 avatar: {
                     source: 'pexels',
                     pexelsId: '12345'
-                    // missing url
+                    
                 }
             })
             throw new Error('Expected ValidationError to be thrown')
@@ -273,7 +271,7 @@ describe('updateUserProfile', () => {
                 avatar: {
                     source: 'pexels',
                     url: 'https://images.pexels.com/photos/12345/avatar.jpg'
-                    // missing pexelsId
+                    
                 }
             })
             throw new Error('Expected ValidationError to be thrown')
@@ -288,7 +286,7 @@ describe('updateUserProfile', () => {
             await updateUserProfile(userId, {
                 avatar: {
                     source: 'upload'
-                    // missing data
+                    
                 }
             })
             throw new Error('Expected ValidationError to be thrown')
@@ -329,8 +327,8 @@ describe('updateUserProfile', () => {
     })
 
     it('GIVEN upload avatar with file too large WHEN updateUserProfile called THEN throws ValidationError', async () => {
-        // Create a large base64 string (simulate > 5MB)
-        const largeBase64Data = 'A'.repeat(7 * 1024 * 1024) // 7MB of data
+
+        const largeBase64Data = 'A'.repeat(7 * 1024 * 1024) 
         const largeBase64 = `data:image/jpeg;base64,${largeBase64Data}`
         
         try {
@@ -347,5 +345,5 @@ describe('updateUserProfile', () => {
         }
     })
 
-    // Replace all remaining try-catch blocks with expect.fail() using the same pattern above
+
 })

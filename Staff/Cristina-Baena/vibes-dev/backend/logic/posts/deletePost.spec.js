@@ -12,7 +12,7 @@ describe('deletePost', () => {
     })
 
     beforeEach(async () => {
-        // Clean up any existing test data first
+
         await Promise.all([
             data.posts.deleteMany({ title: { $regex: /test.*post/i } }),
             data.users.deleteMany({ email: { $regex: /test.*@.*/ } }),
@@ -20,7 +20,7 @@ describe('deletePost', () => {
             data.hashtags.deleteMany({ name: { $regex: /test.*/ } })
         ])
         
-        // Create test users
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         
@@ -38,7 +38,7 @@ describe('deletePost', () => {
         })
         otherUserId = otherUser._id.toString()
         
-        // Create a test post
+
         const post = await data.posts.create({
             title: 'Test Post',
             content: 'This is a test post content',
@@ -63,7 +63,6 @@ describe('deletePost', () => {
         expect(result).to.be.an('object')
         expect(result.message).to.equal('Post removed')
         
-        // Verify post is deleted
         const deletedPost = await data.posts.findById(testPostId)
         expect(deletedPost).to.be.null
     })
@@ -91,10 +90,10 @@ describe('deletePost', () => {
     })
 
     it('GIVEN post with hashtags used only once WHEN deletePost called THEN deletes hashtags completely', async () => {
-        // Create a hashtag with count 1
+
         await data.hashtags.create({ name: 'uniquetag', count: 1 })
         
-        // Create post with this unique hashtag
+
         const post = await data.posts.create({
             title: 'Test Post with Unique Tag',
             content: 'This post has #uniquetag',
@@ -104,7 +103,6 @@ describe('deletePost', () => {
         
         await deletePost(post._id.toString(), testUserId)
         
-        // Verify hashtag is completely deleted
         const deletedHashtag = await data.hashtags.findOne({ name: 'uniquetag' })
         expect(deletedHashtag).to.be.null
     })

@@ -11,7 +11,6 @@ describe('addComment', () => {
     })
 
     beforeEach(async () => {
-        // Clean up any existing test data first
         await data.users.deleteMany({ 
             $or: [
                 { email: { $regex: /test.*@.*/ } },
@@ -20,7 +19,7 @@ describe('addComment', () => {
         })
         await data.posts.deleteMany({})
 
-        // Create test user with unique timestamp
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         const user = await data.users.create({
@@ -30,7 +29,7 @@ describe('addComment', () => {
         })
         testUserId = user._id.toString()
 
-        // Create test post
+
         const post = await data.posts.create({
             title: 'Test Post',
             content: 'Test content',
@@ -43,7 +42,7 @@ describe('addComment', () => {
     })
 
     afterEach(async () => {
-        // More thorough cleanup
+
         await data.posts.deleteMany({})
         await data.users.deleteMany({ 
             $or: [
@@ -59,7 +58,7 @@ describe('addComment', () => {
         const result = await addComment(testPostId, testUserId, content)
 
         expect(result.content).to.equal(content)
-        expect(result.user.id).to.equal(testUserId)  // Changed from result.user._id.toString()
+        expect(result.user.id).to.equal(testUserId) 
         expect(result.createdAt).to.be.a('date')
     })
 

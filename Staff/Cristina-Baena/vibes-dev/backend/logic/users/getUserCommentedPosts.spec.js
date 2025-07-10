@@ -41,7 +41,6 @@ describe('getUserCommentedPosts', () => {
         })
         authorUserId = author._id.toString()
         
-        // Create test post with user comment
         const post = await data.posts.create({
             title: 'Test Commented Post',
             content: 'Content for commented post test',
@@ -71,17 +70,17 @@ describe('getUserCommentedPosts', () => {
         
         const post = result.posts[0]
         
-        // Test _id to id transformation for post
+
         expect(post.id).to.exist
         expect(post._id).to.not.exist
         expect(post.id).to.equal(postId)
         
-        // Test author transformation
+
         expect(post.author.id).to.exist
         expect(post.author._id).to.not.exist
         expect(post.author.id).to.equal(authorUserId)
         
-        // Test comments transformation
+
         expect(post.comments).to.be.an('array')
         expect(post.comments).to.have.length(1)
         
@@ -92,14 +91,14 @@ describe('getUserCommentedPosts', () => {
         expect(comment.user._id).to.not.exist
         expect(comment.user.id).to.equal(testUserId)
         
-        // Test pagination info
+
         expect(result.totalPages).to.be.a('number')
         expect(result.currentPage).to.equal(1)
         expect(result.totalPosts).to.equal(1)
     })
 
     it('GIVEN userId with no commented posts WHEN called getUserCommentedPosts THEN returns empty array', async () => {
-        // Create user with no comments
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         const noCommentsUser = await data.users.create({

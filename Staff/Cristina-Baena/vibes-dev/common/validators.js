@@ -8,7 +8,6 @@ const validator = {
         if (email.length === 0) {
             throw new RangeError('Email is empty')
         }
-        // Fixed email regex - more permissive and standard
          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (emailRegex.test(email) === false) {
             throw new errors.FormatError('Invalid email format')
@@ -77,7 +76,7 @@ const validator = {
         if (id.length === 0) {
             throw new errors.ValidationError('ID cannot be empty')
         }
-        // Check if it's a valid MongoDB ObjectId format (24 hex characters)
+
         if (!/^[0-9a-fA-F]{24}$/.test(id)) {
             throw new errors.ValidationError('Invalid ID format')
         }

@@ -37,7 +37,6 @@ export const useModal = () => {
     setModal(prev => ({ ...prev, isOpen: false }));
   };
 
-  // Convenience methods
   const showSuccess = (message, title = 'Success') => {
     showModal({ title, message, type: 'success' });
   };

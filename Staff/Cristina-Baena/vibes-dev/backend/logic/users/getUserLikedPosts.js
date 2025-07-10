@@ -87,7 +87,7 @@ const getUserLikedPosts = async (userId, filters = {}) => {
                 commentUsers: 0
             }
         },
-        // REPLACE THE PROBLEMATIC $addFields WITH $set:
+
         {
             $set: {
                 id: { $toString: '$_id' },

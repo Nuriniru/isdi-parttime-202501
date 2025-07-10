@@ -3,7 +3,6 @@ import { data } from '../../data/index.js'
 
 const registerUser = async (email, password, username) => {
     try {
-        // Check for existing user
         const existingUser = await data.users.findOne({ $or: [{ email }, { username }] })
         if (existingUser) {
             throw new errors.DuplicityError('user already exists')

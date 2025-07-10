@@ -17,13 +17,13 @@ describe('getUserLikedPosts', () => {
     })
 
     beforeEach(async () => {
-        // Clean up test data
+
         await Promise.all([
             data.posts.deleteMany({ title: { $regex: /test.*liked/i } }),
             data.users.deleteMany({ email: { $regex: /testliked.*@.*/ } })
         ])
         
-        // Create test users
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         
@@ -41,12 +41,12 @@ describe('getUserLikedPosts', () => {
         })
         authorUserId = author._id.toString()
         
-        // Create test post and like it
+
         const post = await data.posts.create({
             title: 'Test Liked Post',
             content: 'Content for liked post test',
             author: authorUserId,
-            likes: [testUserId] // User likes this post
+            likes: [testUserId]
         })
         postId = post._id.toString()
     })
@@ -67,24 +67,24 @@ describe('getUserLikedPosts', () => {
         
         const post = result.posts[0]
         
-        // Test _id to id transformation
+
         expect(post.id).to.exist
         expect(post._id).to.not.exist
         expect(post.id).to.equal(postId)
         
-        // Test author transformation
+
         expect(post.author.id).to.exist
         expect(post.author._id).to.not.exist
         expect(post.author.id).to.equal(authorUserId)
         
-        // Test pagination info
+
         expect(result.totalPages).to.be.a('number')
         expect(result.currentPage).to.equal(1)
         expect(result.totalPosts).to.equal(1)
     })
 
     it('GIVEN userId with no liked posts WHEN called getUserLikedPosts THEN returns empty array', async () => {
-        // Create user with no liked posts
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         const noLikesUser = await data.users.create({

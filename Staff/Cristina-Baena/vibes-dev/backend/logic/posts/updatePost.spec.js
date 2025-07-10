@@ -12,7 +12,7 @@ describe('updatePost', () => {
     })
 
     beforeEach(async () => {
-        // Clean up any existing test data first
+
         await Promise.all([
             data.posts.deleteMany({ title: { $regex: /test.*post/i } }),
             data.users.deleteMany({ email: { $regex: /test.*@.*/ } }),
@@ -20,7 +20,7 @@ describe('updatePost', () => {
             data.hashtags.deleteMany({ name: { $regex: /test.*/ } })
         ])
         
-        // Create test users
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         
@@ -38,7 +38,7 @@ describe('updatePost', () => {
         })
         otherUserId = otherUser._id.toString()
         
-        // Create a test post
+
         const post = await data.posts.create({
             title: 'Test Post',
             content: 'This is a test post content',
@@ -99,7 +99,7 @@ describe('updatePost', () => {
     })
 
     it('GIVEN invalid title WHEN updatePost called THEN throws ValidationError', async () => {
-        const updateData = { title: '   ' } // Whitespace-only string to trigger validation
+        const updateData = { title: '   ' } 
         
         try {
             await updatePost(testPostId, testUserId, updateData)
@@ -110,7 +110,7 @@ describe('updatePost', () => {
     })
 
     it('GIVEN invalid content WHEN updatePost called THEN throws ValidationError', async () => {
-        const updateData = { content: '   ' } // Whitespace-only string to trigger validation
+        const updateData = { content: '   ' } 
         
         try {
             await updatePost(testPostId, testUserId, updateData)
@@ -125,14 +125,14 @@ describe('updatePost', () => {
             image: {
                 url: 'https://example.com/new-image.jpg',
                 altText: 'New image'
-            } // Use proper image object format
+            } 
         }
 
         const result = await updatePost(testPostId, testUserId, updateData)
 
         expect(result.image.url).to.equal('https://example.com/new-image.jpg')
-        expect(result.title).to.equal('Test Post') // Should remain unchanged
-        expect(result.content).to.equal('This is a test post content') // Should remain unchanged
+        expect(result.title).to.equal('Test Post') 
+        expect(result.content).to.equal('This is a test post content') 
     })
 
     it('GIVEN hashtags explicitly set to empty array WHEN updatePost called THEN removes all hashtags', async () => {
@@ -153,7 +153,7 @@ describe('updatePost', () => {
         const result = await updatePost(testPostId, testUserId, updateData)
 
         expect(result.title).to.equal('New Title Only')
-        expect(result.hashtags).to.deep.equal(['original']) // Should keep existing
+        expect(result.hashtags).to.deep.equal(['original'])
     })
 
     after(() => {

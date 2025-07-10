@@ -1,6 +1,5 @@
 import api from './apiService.js';
 
-// Posts API
 export const createPost = async (postData) => {
     try {
         const response = await api.post('/posts', postData);
@@ -67,7 +66,7 @@ export const likePost = async (postId) => {
     const response = await api.post(`/posts/${postId}/like`, {}, {
         headers: { 'X-No-Auto-Redirect': 'true' }
     });
-    // Return the data directly, not the wrapped response
+
     return response.data.data || response.data;
 };
 
@@ -75,11 +74,10 @@ export const addComment = async (postId, content) => {
     const response = await api.post(`/posts/${postId}/comments`, { content }, {
         headers: { 'X-No-Auto-Redirect': 'true' }
     });
-    // Return unwrapped data for consistency with other functions
     return response.data.data || response.data;
 };
 
-// User-specific post functions
+
 export const getMyPosts = async (page = 1, limit = 10) => {
     try {
         const params = new URLSearchParams({
@@ -103,7 +101,6 @@ export const getUserPosts = async (userId, page = 1, limit = 10) => {
         });
         
         const response = await api.get(`/posts?${params}`);
-        // Return the data object which contains posts, totalPages, etc.
         return response.data.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Failed to fetch user posts');

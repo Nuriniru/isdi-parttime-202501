@@ -12,13 +12,13 @@ describe('createPost', () => {
     })
 
     beforeEach(async () => {
-        // Clean up any existing test data first
+
         await Promise.all([
             data.users.deleteMany({ email: { $regex: /test.*@.*/ } }),
             data.users.deleteMany({ username: { $regex: /testuser.*/ } })
         ])
         
-        // Create a test user with unique username
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         const user = await data.users.create({
@@ -51,7 +51,7 @@ describe('createPost', () => {
         expect(result.title).to.equal('Test Post')
         expect(result.content).to.equal('This is a test post content')
         expect(result.hashtags).to.deep.equal(['test', 'mocha'])
-        expect(result.author.id).to.equal(testUserId) // Changed from result.author.toString()
+        expect(result.author.id).to.equal(testUserId) 
         expect(result.likes).to.be.an('array').that.is.empty
     })
 
@@ -91,7 +91,7 @@ describe('createPost', () => {
             expect(error.name).to.equal('NotFoundError')
         }
     })
-// Replace the failing test with this corrected version:
+
 it('GIVEN empty content and no image WHEN createPost called THEN throws ValidationError', async () => {
     try {
         await createPost(testUserId, {

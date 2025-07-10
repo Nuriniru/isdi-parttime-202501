@@ -16,12 +16,11 @@ describe('registerUser', () => {
         return data.disconnect()
     })
 
-    // Clean up test data after each test
+
     afterEach(async () => {
         try {
             await data.users.deleteMany({ email: { $regex: /test.*@mail\.com/ } })
         } catch (error) {
-            // If disconnected, just resolve
             return Promise.resolve()
         }
     })
@@ -33,15 +32,15 @@ describe('registerUser', () => {
 
         return registerUser(email, password, username)
             .then((result) => {
-                // Test the returned transformed user
+
                 expect(result).to.not.be.empty
                 expect(result.email).to.equal(email)
                 expect(result.username).to.equal(username)
-                expect(result.id).to.exist // Should have 'id' field
-                expect(result._id).to.not.exist // Should NOT have '_id' field
-                expect(result.password).to.not.exist // Should not expose password
+                expect(result.id).to.exist 
+                expect(result._id).to.not.exist 
+                expect(result.password).to.not.exist 
                 
-                // Verify in database
+
                 return data.users.find({ email })
                     .then((users) => {
                         const user = users[0]
@@ -51,8 +50,8 @@ describe('registerUser', () => {
                                 expect(user.email).to.equal(email)
                                 expect(passwordMatch).to.be.true
                                 expect(user.username).to.equal(username)
-                                expect(user._id).to.exist // DB should still have _id
-                                expect(user._id.toString()).to.equal(result.id) // IDs should match
+                                expect(user._id).to.exist 
+                                expect(user._id.toString()).to.equal(result.id)
                             })
                     })
             })
@@ -77,20 +76,18 @@ describe('registerUser', () => {
             })
     })
 
-    // Database connection error handling
     it('GIVEN database connection fails WHEN called registerUser THEN throws ServerError', () => {
         const email = 'test-connection@mail.com'
         const password = '12345Aa!'
         const username = 'test-connection'
         
-        // Temporarily disconnect to simulate connection error
+
         return data.disconnect()
             .then(() => {
                 return registerUser(email, password, username)
                     .catch(error => {
                         expect(error).to.be.instanceOf(errors.ServerError)
                         expect(error.message).to.include('Client must be connected')
-                        // Reconnect for other tests
                         return data.connect(process.env.MONGODB_URI_TEST)
                     })
             })

@@ -8,10 +8,10 @@ const getUserCommentedPosts = async (userId, filters = {}) => {
     const { page = 1, limit = 10 } = filters
     const skip = (page - 1) * limit
     
-    // Convert userId to ObjectId for MongoDB query
+
     const userObjectId = new mongoose.Types.ObjectId(userId)
     
-    // Find posts where the user has commented
+
     const posts = await Post.aggregate([
         {
             $match: {
@@ -22,7 +22,7 @@ const getUserCommentedPosts = async (userId, filters = {}) => {
             $addFields: {
                 likesCount: { $size: "$likes" },
                 commentsCount: { $size: "$comments" },
-                // Add user's comments to the post
+
                 userComments: {
                     $filter: {
                         input: '$comments',
@@ -31,7 +31,7 @@ const getUserCommentedPosts = async (userId, filters = {}) => {
                 }
             }
         },
-        { $sort: { 'userComments.createdAt': -1 } }, // Sort by user's latest comment
+        { $sort: { 'userComments.createdAt': -1 } }, 
         { $skip: skip },
         { $limit: parseInt(limit) },
         {

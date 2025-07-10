@@ -30,13 +30,12 @@ export const useValidation = () => {
           }
           break;
         default:
-          // For custom validation, just check if value exists
+
           if (!value || value.trim() === '') {
             throw new errors.ValidationError('This field is required');
           }
       }
 
-      // Clear error if validation passes
       setValidationErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors[fieldName];
@@ -75,18 +74,17 @@ export const useValidation = () => {
     Object.entries(validationRules).forEach(([fieldName, rules]) => {
       const value = formData[fieldName];
       
-      // Handle array of validation rules
+
       if (Array.isArray(rules)) {
         for (const rule of rules) {
           const result = validateField(fieldName, value, rule);
           if (!result.isValid) {
             errors[fieldName] = result.error;
             isFormValid = false;
-            break; // Stop at first error
+            break;
           }
         }
       } else {
-        // Handle single validation rule
         const result = validateField(fieldName, value, rules);
         if (!result.isValid) {
           errors[fieldName] = result.error;
@@ -101,7 +99,7 @@ export const useValidation = () => {
 
   const clearErrors = useCallback((fieldNames = null) => {
     if (fieldNames) {
-      // Clear specific fields
+
       const fieldsArray = Array.isArray(fieldNames) ? fieldNames : [fieldNames];
       setValidationErrors(prev => {
         const newErrors = { ...prev };
@@ -109,7 +107,6 @@ export const useValidation = () => {
         return newErrors;
       });
     } else {
-      // Clear all errors
       setValidationErrors({});
     }
   }, []);

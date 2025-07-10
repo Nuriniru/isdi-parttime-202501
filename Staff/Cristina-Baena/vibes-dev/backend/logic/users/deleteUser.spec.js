@@ -3,7 +3,7 @@ import { expect } from "chai"
 import jwt from "jsonwebtoken"
 import deleteUser from "./deleteUser.js"
 import { errors } from 'common'
-import { data } from "../../data/index.js"  // Changed from default to named import
+import { data } from "../../data/index.js" 
 import bcrypt from "bcryptjs"
 
 describe('deleteUser', () => {
@@ -36,7 +36,6 @@ describe('deleteUser', () => {
     it('GIVEN valid user ID WHEN deleteUser called THEN deletes user successfully', async () => {
         await deleteUser(userId)
         
-        // Verify user is deleted
         const deletedUser = await data.users.findById(userId)
         expect(deletedUser).to.be.null
     })

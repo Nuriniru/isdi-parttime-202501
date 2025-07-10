@@ -16,9 +16,9 @@ describe('loginUser', () => {
         return data.disconnect()
     })
 
-    // Clean up test data after each test
+
     afterEach(() => {
-        // Only cleanup if connected
+
         if (data.isConnected && data.isConnected()) {
             return data.users.deleteMany({})
         }
@@ -30,7 +30,6 @@ describe('loginUser', () => {
         const email = 'test-login@mail.com'
         const username = 'test-login'
 
-        // Create user without pre-hashing - let the model handle it
         return data.users.create({ username, password, email })
             .then(createdUser => {
                 return loginUser(email, password)
@@ -44,7 +43,7 @@ describe('loginUser', () => {
     it('GIVEN an email that does not exist WHEN trying to login THEN throws ServerError', () => {
         return loginUser('nonexistent@mail.com', 'notarealpassword')
             .catch(error => {
-                expect(error).to.be.an.instanceof(errors.ServerError)  // Changed from ExistenceError
+                expect(error).to.be.an.instanceof(errors.ServerError) 
                 expect(error.message).to.be.a('string')
                 expect(error.message).to.be.equal('user not found')
             })
@@ -69,30 +68,29 @@ describe('loginUser', () => {
             })
     })
 
-    // NEW TEST: Database connection error handling
+
     it('GIVEN database connection fails WHEN called login THEN throws ServerError', () => {
         const email = 'test-connection@mail.com'
         const password = '12345Aa!'
         
-        // Temporarily disconnect to simulate connection error
+
         return data.disconnect()
             .then(() => {
                 return loginUser(email, password)
                     .catch(error => {
                         expect(error).to.be.instanceOf(errors.ServerError)
                         expect(error.message).to.include('Client must be connected')
-                        // Reconnect for other tests
                         return data.connect(process.env.MONGODB_URI_TEST)
                     })
             })
     })
 
-    // NEW TEST: Unexpected database error
+
     it('GIVEN unexpected database error WHEN called login THEN throws ServerError', () => {
         const email = 'test-db-error@mail.com'
         const password = '12345Aa!'
         
-        // Mock findOne to throw an unexpected error
+
         const originalFindOne = data.users.findOne
         data.users.findOne = sinon.stub().throws(new Error('Unexpected database error'))
         
@@ -100,7 +98,6 @@ describe('loginUser', () => {
             .catch(error => {
                 expect(error).to.be.instanceOf(errors.ServerError)
                 expect(error.message).to.include('Unexpected database error')
-                // Restore original method
                 data.users.findOne = originalFindOne
             })
     })

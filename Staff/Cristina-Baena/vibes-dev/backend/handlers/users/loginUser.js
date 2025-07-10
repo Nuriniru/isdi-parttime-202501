@@ -1,11 +1,10 @@
 
-import { asyncHandler } from '../../utils/errorHandler.js'  // Changed from '../../middleware/errorHandler.js'
+import { asyncHandler } from '../../utils/errorHandler.js' 
 import { loginUser as loginUserLogic } from '../../logic/index.js'
 import { validator, errors } from 'common'
 import jwt from 'jsonwebtoken'
 import { sanitizeUser } from '../../utils/sanitize.js'
 
-// Generate JWT
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: '30d'
@@ -15,15 +14,12 @@ const generateToken = (id) => {
 const loginUser = asyncHandler(async (req, res) => {
     
     const { email, password } = req.body
-    
-    // Validate input
     validator.email(email)
     validator.password(password)
     
-    // Call business logic
     const userId = await loginUserLogic(email, password)
     
-    // Import User model dynamically to avoid circular dependency
+
     const { default: User } = await import('../../models/userModel.js')
     const user = await User.findById(userId)
     

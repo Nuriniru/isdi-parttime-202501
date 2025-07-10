@@ -12,13 +12,13 @@ describe('getUserProfile', () => {
     })
 
     beforeEach(async () => {
-        // Clean up any existing test data first
+
         await Promise.all([
             data.users.deleteMany({ email: { $regex: /test.*@.*/ } }),
             data.users.deleteMany({ username: { $regex: /testuser.*/ } })
         ])
         
-        // Create a test user
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         const user = await data.users.create({
@@ -45,7 +45,7 @@ describe('getUserProfile', () => {
         expect(result.email).to.include('test')
         expect(result.bio).to.equal('Test user bio')
         expect(result.password).to.be.undefined
-        expect(result.id).to.equal(testUserId)  // Changed from result._id.toString()
+        expect(result.id).to.equal(testUserId) 
     })
 
     it('GIVEN invalid user ID WHEN getUserProfile called THEN throws NotFoundError', async () => {

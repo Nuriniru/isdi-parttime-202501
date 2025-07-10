@@ -8,19 +8,18 @@ const getPosts = async (filters = {}) => {
     
     const matchStage = {}
     
-    // Filter by hashtag if provided
+
     if (hashtag) {
         matchStage.hashtags = { $in: [hashtag.toLowerCase()] }
     }
     
-    // Filter by author if provided
+
     if (author) {
         matchStage.author = new mongoose.Types.ObjectId(author)
     }
     
   
     
-    // Determine sort criteria based on sortBy parameter
     let sortCriteria
     switch (sortBy) {
         case 'recent':
@@ -35,7 +34,7 @@ const getPosts = async (filters = {}) => {
     }
     
   
-    // First, let's check if there are any posts at all
+
     const totalPostsInDB = await Post.countDocuments({})
     
     
@@ -44,7 +43,6 @@ const getPosts = async (filters = {}) => {
         {
             $addFields: {
                 likesCount: { $size: "$likes" },
-                // Ensure createdAt is available for sorting
                 sortDate: "$createdAt"
             }
         },
@@ -125,10 +123,9 @@ const getPosts = async (filters = {}) => {
     
     const totalPosts = await Post.countDocuments(matchStage)
     
-    // Transform _id fields to id fields for frontend compatibility
-    // After the transformation around line 120
+
     const transformedPosts = posts.map(post => {
-        // Transform main post _id to id
+
         if (!post._id) {
             console.warn('Post without _id found:', post);
             return null;
@@ -161,7 +158,7 @@ const getPosts = async (filters = {}) => {
         }
         
         return post;
-    }).filter(Boolean); // Remove null posts
+    }).filter(Boolean); 
     
     return {
         posts: transformedPosts,

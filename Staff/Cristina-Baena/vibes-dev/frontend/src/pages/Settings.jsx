@@ -14,7 +14,7 @@ import { updateProfile as updateProfileService } from '../services/authService';
 import { updatePassword } from '../services/passwordService';
 
 const Settings = () => {
-  const { user } = useAuth(); // Remove updateProfile from here
+  const { user } = useAuth(); 
   const navigate = useNavigate();
   const { modal, hideModal, showError } = useModal();
   
@@ -48,7 +48,7 @@ const Settings = () => {
   const handleAvatarSelect = async (imageData) => {
     setLoading(true);
     try {
-      // Validate image size before sending
+
       if (imageData.source === 'upload' && imageData.url) {
         const base64Data = imageData.url.split(',')[1]
         const sizeInBytes = (base64Data.length * 3) / 4
@@ -65,7 +65,7 @@ const Settings = () => {
         alt: imageData.alt || imageData.originalName || 'User avatar'
       };
   
-      // Handle different avatar sources
+
       if (imageData.source === 'upload') {
         avatarData.url = imageData.url;
         avatarData.thumbnail = imageData.url;
@@ -84,28 +84,26 @@ const Settings = () => {
         avatarData.thumbnail = imageData.thumbnail || imageData.url;
       }
 
-      // Fix: Use updateProfileService instead of updateProfile
       await updateProfileService({ avatar: avatarData });
       setShowAvatarSelector(false);
     } catch (error) {
       console.error('Error updating avatar:', error);
       showError(`Failed to update avatar: ${error.message}`);
     } finally {
-      // Always reset loading state
+
       setLoading(false);
     }
   };
 
   const handleUpdateProfile = async (e) => {
-      console.log('=== FUNCTION CALLED ==='); // Add this line first
+
       e.preventDefault();
       try {
           setLoading(true);
           setErrors({});
   
           
-  
-          // Handle password change first if provided
+
           if (formData.currentPassword && formData.newPassword && formData.confirmPassword) {
               console.log('=== ENTERING PASSWORD UPDATE LOGIC ===');
               
@@ -160,7 +158,6 @@ const Settings = () => {
               updateData.avatar = formData.avatar;
           }
           
-          // Validate required fields
           if (!updateData.username || !updateData.email) {
               throw new Error('Username and email are required');
           }
@@ -174,47 +171,10 @@ const Settings = () => {
           setErrors({ general: error.message });
           showError(`Failed to update profile: ${error.message}`);
       } finally {
-          setLoading(false); // Fix: Use setLoading instead of setUpdating
+          setLoading(false); 
       }
   };
 
-  // const handlePasswordChange = async () => {
-  //   try {
-  //     // Validate password fields
-  //     if (!formData.currentPassword) {
-  //         throw new Error('Current password is required');
-  //     }
-  //     if (!formData.newPassword) {
-  //         throw new Error('New password is required');
-  //     }
-  //     if (formData.newPassword !== formData.confirmPassword) {
-  //         throw new Error('New password and confirmation do not match');
-  //     }
-  //     if (formData.newPassword.length < 6) {
-  //         throw new Error('New password must be at least 6 characters long');
-  //     }
-  
-  //     await updatePassword(
-  //         formData.currentPassword,
-  //         formData.newPassword,
-  //         formData.confirmPassword
-  //     );
-  
-  //     // Clear password fields after successful update
-  //     setFormData(prev => ({
-  //       ...prev,
-  //       currentPassword: '',
-  //       newPassword: '',
-  //       confirmPassword: ''
-  //     }));
-  
-  //     // Show success message
-  //     alert('Password updated successfully!');
-  //   } catch (error) {
-  //     throw new Error(`Password update failed: ${error.message}`);
-  //   }
-  // };
-// Add this useEffect after your state declarations
 useEffect(() => {
   if (user) {
     setFormData(prev => ({
@@ -229,7 +189,7 @@ useEffect(() => {
     <>
       <div className="min-h-screen bg-gradient-to-br from-purple-900/70 via-purple-800 to-transparent">
         <div className="container mx-auto px-4 py-8">
-          {/* Back Button */}
+
           <button
             onClick={() => navigate('/profile')}
             className="flex items-center text-white/70 hover:text-white mb-6 transition-colors"
@@ -238,12 +198,12 @@ useEffect(() => {
             Back to Profile
           </button>
 
-          {/* Settings Form */}
+
           <div className="glass-card rounded-lg p-8 max-w-2xl mx-auto">
             <h1 className="text-2xl font-bold text-white mb-8">Account Settings</h1>
             
             <form onSubmit={handleUpdateProfile} className="space-y-6">
-              {/* Avatar Section */}
+
               <div className="flex flex-col items-center space-y-4">
                 <div className="relative">
                   <Avatar
@@ -264,7 +224,6 @@ useEffect(() => {
                 <p className="text-white/70 text-sm">Click the edit button to change your avatar</p>
               </div>
 
-              {/* Profile Information */}
               <div className="space-y-4">
                 <h2 className="text-lg font-semibold text-white">Profile Information</h2>
                 <Input
@@ -296,10 +255,10 @@ useEffect(() => {
                 />
               </div>
 
-              {/* Password Section */}
+
               <div className="space-y-4">
                 <h2 className="text-lg font-semibold text-white">Change Password</h2>
-                {/* Current Password */}
+
                 <div>
                   <label className="block text-sm font-medium text-white mb-2">
                     Current Password
@@ -315,7 +274,7 @@ useEffect(() => {
                   />
                 </div>
                 
-                {/* New Password */}
+
                 <div>
                   <label className="block text-sm font-medium text-white mb-2">
                     New Password
@@ -331,7 +290,6 @@ useEffect(() => {
                   />
                 </div>
                 
-                {/* Confirm Password */}
                 <div>
                   <label className="block text-sm font-medium text-white mb-2">
                     Confirm New Password
@@ -348,14 +306,13 @@ useEffect(() => {
                 </div>
               </div>
 
-              {/* Error Message */}
               {errors.submit && (
                 <div className="text-red-400 text-sm">
                   {errors.submit}
                 </div>
               )}
 
-              {/* Action Buttons */}
+
               <div className="flex flex-col sm:flex-row justify-end space-y-4 sm:space-y-0 sm:space-x-4 pt-6">
                 <Button
                   type="button"
@@ -377,7 +334,6 @@ useEffect(() => {
             </form>
           </div>
 
-          {/* Avatar Selector Modal */}
           {showAvatarSelector && (
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
               <div className="glass-card rounded-lg p-6 w-full max-w-6xl max-h-[90vh] overflow-y-auto">
@@ -403,7 +359,6 @@ useEffect(() => {
         </div>
       </div>
       
-      {/* Modal component */}
       <Modal
         isOpen={modal.isOpen}
         onClose={hideModal}

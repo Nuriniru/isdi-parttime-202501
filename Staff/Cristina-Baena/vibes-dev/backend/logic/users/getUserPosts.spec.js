@@ -12,14 +12,14 @@ describe('getUserPosts', () => {
     })
 
     beforeEach(async () => {
-        // Clean up any existing test data first
+
         await Promise.all([
             data.posts.deleteMany({ title: { $regex: /test.*post/i } }),
             data.users.deleteMany({ email: { $regex: /test.*@.*/ } }),
             data.users.deleteMany({ username: { $regex: /testuser.*/ } })
         ])
         
-        // Create test users
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         
@@ -37,7 +37,7 @@ describe('getUserPosts', () => {
         })
         otherUserId = otherUser._id.toString()
         
-        // Create test posts for the user
+
         await data.posts.create({
             title: 'Test Post 1',
             content: 'Content for test post 1',
@@ -50,7 +50,7 @@ describe('getUserPosts', () => {
             author: testUserId
         })
         
-        // Create a post for another user (should not be included)
+ 
         await data.posts.create({
             title: 'Other User Post',
             content: 'Content for other user post',
@@ -76,9 +76,9 @@ describe('getUserPosts', () => {
         expect(result.total).to.equal(2)
         expect(result.currentPage).to.equal(1)
         
-        // Verify all posts belong to the user
+
         result.posts.forEach(post => {
-            expect(post.author.id).to.equal(testUserId)  // Changed from post.author._id.toString()
+            expect(post.author.id).to.equal(testUserId) 
         })
     })
 
@@ -99,7 +99,7 @@ describe('getUserPosts', () => {
     })
 
     it('GIVEN user with no posts WHEN getUserPosts called THEN returns empty array', async () => {
-        // Create a new user with no posts
+
         const timestamp = Date.now()
         const hashedPassword = await bcrypt.hash('Test123$!', 10)
         const newUser = await data.users.create({

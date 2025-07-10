@@ -19,16 +19,15 @@ const createPost = async (userId, postData) => {
         throw new errors.NotFoundError('User not found')
     }
     
-    // Extract hashtags from content and combine with provided hashtags
+ 
     let allHashtags = hashtags || []
     if (content) {
         const tempPost = new Post({ title, content, author: userId })
         const contentHashtags = tempPost.extractHashtags(content)
-        // Combine provided hashtags with extracted hashtags, removing duplicates
         allHashtags = [...new Set([...allHashtags, ...contentHashtags])]
     }
     
-    // Create the post
+
     const post = await Post.create({
         title,
         content,
@@ -40,7 +39,7 @@ const createPost = async (userId, postData) => {
     
     const populatedPost = await Post.findById(post._id).populate('author', 'username avatar')
     
-    // Handle hashtags - update hashtag counts
+
     if (allHashtags && allHashtags.length > 0) {
         for (const tag of allHashtags) {
             await Hashtag.findOneAndUpdate(

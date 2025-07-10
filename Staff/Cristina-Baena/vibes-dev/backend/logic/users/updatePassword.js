@@ -4,7 +4,6 @@ import User from '../../models/userModel.js';
 const updatePassword = async (userId, newPassword, currentPassword) => {
     try {
                 
-        // Find user
         const user = await User.findById(userId);
         if (!user) {
             console.log('ERROR: User not found for ID:', userId);
